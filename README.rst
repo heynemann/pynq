@@ -8,7 +8,7 @@ Pynq is an implementation in Python of the Expression Tree theory and some of th
 Expressions not implemented
 ---------------------------
 
-So far the following expressions haven't (and probably won't) been implemented:
--AddChecked
--MultiplyChecked
--SubtractChecked
+So far the following expressions aren't (and probably won't be) implemented:
+# AddChecked
+# MultiplyChecked
+# SubtractChecked

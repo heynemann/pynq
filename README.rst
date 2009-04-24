@@ -10,7 +10,13 @@ Expressions not implemented
 
 So far the following expressions aren't (and probably won't be) implemented:
 
-* AddChecked
-* MultiplyChecked
-* SubtractChecked
-* Coalesce (first not null item in a list of items)
+* AddChecked_
+* MultiplyChecked_
+* SubtractChecked_
+* Coalesce_ (first not null item in a list of items)
+
+.. _AddChecked: http://msdn.microsoft.com/en-us/library/system.linq.expressions.expressiontype.addchecked.aspx
+.. _MultiplyChecked: http://msdn.microsoft.com/en-us/library/system.linq.expressions.expressiontype.multiplychecked.aspx
+.. _SubtractChecked: http://msdn.microsoft.com/en-us/library/system.linq.expressions.expressiontype.subtractchecked.aspx
+.. _Coalesce: http://msdn.microsoft.com/en-us/library/system.linq.expressions.expressiontype.coalesce.aspx
+

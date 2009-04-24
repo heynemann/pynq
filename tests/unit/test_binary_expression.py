@@ -52,7 +52,7 @@ class TestBinaryExpression(BaseUnitTest):
         node_type = BinaryExpression.Add
         expr = BinaryExpression(node_type, a, b)
         
-        self.assertEquals("10+20", str(expr))
+        self.assertEquals("(10 + 20)", str(expr))
 
     def test_nested_addition_expression(self):
         a = ConstantExpression(10)
@@ -70,7 +70,14 @@ class TestBinaryExpression(BaseUnitTest):
         self.assertEquals(expr.rhs, c)
     
     def test_nested_addition_expression_representation(self):
-        self.failIf(True, "Not Implemented")
+        a = ConstantExpression(10)
+        b = ConstantExpression(20)
+        c = ConstantExpression(30)
+        add_node = BinaryExpression.Add
+
+        expr = BinaryExpression(add_node, BinaryExpression(add_node, a, b), c)
+
+        self.assertEquals("((10 + 20) + 30)", str(expr))
 
 if __name__ == '__main__':
     unittest.main()

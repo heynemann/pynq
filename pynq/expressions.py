@@ -63,6 +63,6 @@ class BinaryExpression(Expression):
         self.rhs = rhs
 
     def __str__(self):
-        return "%s%s%s" % (str(self.lhs), 
+        return "(%s %s %s)" % (str(self.lhs), 
                            self.representations[self.node_type], 
                            str(self.rhs))

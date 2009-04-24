@@ -41,12 +41,19 @@ class ConstantExpression(Expression):
     __str__ = __unicode__
 
 class BinaryExpression(Expression):
-    #operation representations
-    representations = {
-                        "Add":"+",
-                      }
     #operation types
     Add = "Add"
+    Subtract = "Subtract"
+    Multiply = "Multiply"
+    Divide = "Divide"
+    
+    #operation representations
+    representations = {
+                        Add:"+",
+                        Subtract:"-",
+                        Multiply:"*",
+                        Divide:"/",
+                      }
     
     def __init__(self, node_type, lhs, rhs):
         '''Initializes the BinaryExpression with the specified arguments.

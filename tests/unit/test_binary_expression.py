@@ -213,5 +213,49 @@ class TestBinaryExpression(BaseUnitTest):
 
         self.assertEquals("((10 / 20) / 30)", str(expr))
 
+#Power
+    def test_expression_for_power_of_two_constants(self):
+        a = ConstantExpression(10)
+        b = ConstantExpression(20)
+        node_type = BinaryExpression.Power
+        expr = BinaryExpression(node_type, a, b)
+
+        self.assertEquals(expr.node_type, node_type)
+        self.assertEquals(expr.lhs, a)
+        self.assertEquals(expr.rhs, b)
+
+    def test_expression_for_power_of_two_constants_representation(self):
+        a = ConstantExpression(10)
+        b = ConstantExpression(20)
+        node_type = BinaryExpression.Power
+        expr = BinaryExpression(node_type, a, b)
+        
+        self.assertEquals("(10 ^ 20)", str(expr))
+
+    def test_nested_power_expression(self):
+        a = ConstantExpression(10)
+        b = ConstantExpression(20)
+        c = ConstantExpression(30)
+        node_type = BinaryExpression.Power
+
+        expr = BinaryExpression(node_type, BinaryExpression(node_type, a, b), c)
+
+        self.assertEquals(expr.node_type, node_type)
+        self.failUnless(isinstance(expr.lhs, BinaryExpression), "The left-hand side of the binary expression should be a binary expression as well, but is %s" % expr.lhs.__class__)
+        self.assertEquals(expr.lhs.node_type, node_type)
+        self.assertEquals(expr.lhs.lhs, a)
+        self.assertEquals(expr.lhs.rhs, b)
+        self.assertEquals(expr.rhs, c)
+    
+    def test_nested_power_expression_representation(self):
+        a = ConstantExpression(10)
+        b = ConstantExpression(20)
+        c = ConstantExpression(30)
+        node_type = BinaryExpression.Power
+
+        expr = BinaryExpression(node_type, BinaryExpression(node_type, a, b), c)
+
+        self.assertEquals("((10 ^ 20) ^ 30)", str(expr))
+
 if __name__ == '__main__':
     unittest.main()

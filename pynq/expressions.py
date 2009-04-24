@@ -46,6 +46,7 @@ class BinaryExpression(Expression):
     Subtract = "Subtract"
     Multiply = "Multiply"
     Divide = "Divide"
+    Power = "Power"
     
     #operation representations
     representations = {
@@ -53,6 +54,7 @@ class BinaryExpression(Expression):
                         Subtract:"-",
                         Multiply:"*",
                         Divide:"/",
+                        Power:"^",
                       }
     
     def __init__(self, node_type, lhs, rhs):

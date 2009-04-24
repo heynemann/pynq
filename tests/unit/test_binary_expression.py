@@ -68,6 +68,9 @@ class TestBinaryExpression(BaseUnitTest):
         self.assertEquals(expr.lhs.lhs, a)
         self.assertEquals(expr.lhs.rhs, b)
         self.assertEquals(expr.rhs, c)
+    
+    def test_nested_addition_expression_representation(self):
+        self.failIf(True, "Not Implemented")
 
 if __name__ == '__main__':
     unittest.main()

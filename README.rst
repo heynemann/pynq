@@ -12,3 +12,4 @@ So far the following expressions aren't (and probably won't be) implemented:
 # AddChecked
 # MultiplyChecked
 # SubtractChecked
+# Coalesce (first not null item in a list of items)

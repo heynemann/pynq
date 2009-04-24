@@ -42,12 +42,17 @@ class ConstantExpression(Expression):
 
 class BinaryExpression(Expression):
     #operation types
+    
+    #Arithmetic
     Add = "Add"
     Subtract = "Subtract"
     Multiply = "Multiply"
     Divide = "Divide"
     Power = "Power"
     Modulo = "Modulo"
+    
+    #Bitwise
+    And = "And"
     
     #operation representations
     representations = {
@@ -57,6 +62,7 @@ class BinaryExpression(Expression):
                         Divide:"/",
                         Power:"^",
                         Modulo:"%",
+                        And:"and",
                       }
     
     def __init__(self, node_type, lhs, rhs):

@@ -55,6 +55,10 @@ class BinaryExpression(Expression):
     And = "And"
     Or = "Or"
     
+    #Boolean Conditional
+    AndAlso = "AndAlso"
+    OrElse = "OrElse"
+    
     #operation representations
     representations = {
                         Add:"+",
@@ -65,6 +69,8 @@ class BinaryExpression(Expression):
                         Modulo:"%",
                         And:"and",
                         Or: "or",
+                        AndAlso:"and also",
+                        OrElse: "or else",
                       }
     
     def __init__(self, node_type, lhs, rhs):

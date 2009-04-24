@@ -14,9 +14,15 @@ So far the following expressions aren't (and probably won't be) implemented:
 * MultiplyChecked_
 * SubtractChecked_
 * Coalesce_ (first not null item in a list of items)
+* ExclusiveOr_
+* LeftShift_
+* RightShift_
 
 .. _AddChecked: http://msdn.microsoft.com/en-us/library/system.linq.expressions.expressiontype.addchecked.aspx
 .. _MultiplyChecked: http://msdn.microsoft.com/en-us/library/system.linq.expressions.expressiontype.multiplychecked.aspx
 .. _SubtractChecked: http://msdn.microsoft.com/en-us/library/system.linq.expressions.expressiontype.subtractchecked.aspx
 .. _Coalesce: http://msdn.microsoft.com/en-us/library/system.linq.expressions.expressiontype.coalesce.aspx
+.. _ExclusiveOr: http://msdn.microsoft.com/en-us/library/system.linq.expressions.expressiontype.exclusiveor.aspx
+.. _LeftShift: http://msdn.microsoft.com/en-us/library/system.linq.expressions.expressiontype.leftshift.aspx
+.. _RightShift: http://msdn.microsoft.com/en-us/library/system.linq.expressions.expressiontype.rightshift.aspx
 

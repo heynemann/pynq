@@ -36,7 +36,7 @@ class TestBinaryBooleanExpressions(BaseUnitTest):
         self.assertEquals(expr.lhs, a)
         self.assertEquals(expr.rhs, b)
 
-    def test_expression_and_of_two_constants_representation(self):
+    def test_expression_and_also_of_two_constants_representation(self):
         a = ConstantExpression(True)
         b = ConstantExpression(False)
         node_type = BinaryExpression.AndAlso
@@ -44,7 +44,7 @@ class TestBinaryBooleanExpressions(BaseUnitTest):
         
         self.assertEquals("(True and also False)", str(expr))
 
-    def test_nested_and_expression(self):
+    def test_nested_and_also_expression(self):
         a = ConstantExpression(True)
         b = ConstantExpression(False)
         c = ConstantExpression(None)

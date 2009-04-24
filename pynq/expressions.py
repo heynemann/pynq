@@ -59,6 +59,14 @@ class BinaryExpression(Expression):
     AndAlso = "AndAlso"
     OrElse = "OrElse"
     
+    #Comparison Operators
+    Equal = "Equal"
+    NotEqual = "NotEqual"
+    GreaterThan = "GreaterThan"
+    GreaterThanOrEqual = "GreaterThanOrEqual"
+    LessThan = "LessThan"
+    LessThanOrEqual = "LessThanOrEqual"
+    
     #operation representations
     representations = {
                         Add:"+",
@@ -71,6 +79,12 @@ class BinaryExpression(Expression):
                         Or: "or",
                         AndAlso:"and also",
                         OrElse: "or else",
+                        Equal: "==",
+                        NotEqual: "!=",
+                        GreaterThan: ">",
+                        GreaterThanOrEqual: ">=",
+                        LessThan: "<",
+                        LessThanOrEqual: "<=",
                       }
     
     def __init__(self, node_type, lhs, rhs):
@@ -88,6 +102,7 @@ class BinaryExpression(Expression):
         self.rhs = rhs
 
     def __str__(self):
+        '''Returns a string representing the expression.'''
         return "(%s %s %s)" % (str(self.lhs), 
                            self.representations[self.node_type], 
                            str(self.rhs))

@@ -1,0 +1,59 @@
+#!/usr/bin/env python
+# -*- coding:utf-8 -*-
+
+# Licensed under the Open Software License ("OSL") v. 3.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.opensource.org/licenses/osl-3.0.php
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+import sys
+import unittest
+import re
+
+class BaseUnitTest(unittest.TestCase):
+    def assertRaisesEx(self, exception, callable, *args, **kwargs):
+        if "exc_args" in kwargs:
+            exc_args = kwargs["exc_args"]
+            del kwargs["exc_args"]
+        else:
+            exc_args = None
+        if "exc_pattern" in kwargs:
+            exc_pattern = kwargs["exc_pattern"]
+            del kwargs["exc_pattern"]
+        else:
+            exc_pattern = None
+
+        argv = [repr(a) for a in args]\
+               + ["%s=%r" % (k,v)  for k,v in kwargs.items()]
+        callsig = "%s(%s)" % (callable.__name__, ", ".join(argv))
+
+        try:
+            callable(*args, **kwargs)
+        except exception, exc:
+            if exc_args is not None:
+                self.failIf(exc.args != exc_args,
+                            "%s raised %s with unexpected args: "\
+                            "expected=%r, actual=%r"\
+                            % (callsig, exc.__class__, exc_args, exc.args))
+            if exc_pattern is not None:
+                self.failUnless(exc_pattern.search(str(exc)),
+                                "%s raised %s, but the exception "\
+                                "does not match '%s': %r"\
+                                % (callsig, exc.__class__, exc_pattern.pattern,
+                                   str(exc)))
+        except:
+            exc_info = sys.exc_info()
+            print exc_info
+            self.fail("%s raised an unexpected exception type: "\
+                      "expected=%s, actual=%s"\
+                      % (callsig, exception, exc_info[0]))
+        else:
+            self.fail("%s did not raise %s" % (callsig, exception))
+

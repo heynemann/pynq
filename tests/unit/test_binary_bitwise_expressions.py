@@ -59,7 +59,7 @@ class TestBinaryBitwiseExpressions(BaseUnitTest):
         self.assertEquals(expr.lhs.rhs, b)
         self.assertEquals(expr.rhs, c)
     
-    def test_nested_addition_expression_representation(self):
+    def test_nested_and_expression_representation(self):
         a = ConstantExpression(True)
         b = ConstantExpression(False)
         c = ConstantExpression(None)
@@ -68,6 +68,50 @@ class TestBinaryBitwiseExpressions(BaseUnitTest):
         expr = BinaryExpression(node_type, BinaryExpression(node_type, a, b), c)
 
         self.assertEquals("((True and False) and None)", str(expr))
+        
+#Or
+    def test_expression_or_of_two_constants(self):
+        a = ConstantExpression(True)
+        b = ConstantExpression(False)
+        node_type = BinaryExpression.Or
+        expr = BinaryExpression(node_type, a, b)
+
+        self.assertEquals(expr.node_type, node_type)
+        self.assertEquals(expr.lhs, a)
+        self.assertEquals(expr.rhs, b)
+
+    def test_expression_or_of_two_constants_representation(self):
+        a = ConstantExpression(True)
+        b = ConstantExpression(False)
+        node_type = BinaryExpression.Or
+        expr = BinaryExpression(node_type, a, b)
+        
+        self.assertEquals("(True or False)", str(expr))
+
+    def test_nested_or_expression(self):
+        a = ConstantExpression(True)
+        b = ConstantExpression(False)
+        c = ConstantExpression(None)
+        node_type = BinaryExpression.Or
+
+        expr = BinaryExpression(node_type, BinaryExpression(node_type, a, b), c)
+
+        self.assertEquals(expr.node_type, node_type)
+        self.failUnless(isinstance(expr.lhs, BinaryExpression), "The left-hand side of the binary expression should be a binary expression as well, but is %s" % expr.lhs.__class__)
+        self.assertEquals(expr.lhs.node_type, node_type)
+        self.assertEquals(expr.lhs.lhs, a)
+        self.assertEquals(expr.lhs.rhs, b)
+        self.assertEquals(expr.rhs, c)
+    
+    def test_nested_or_expression_representation(self):
+        a = ConstantExpression(True)
+        b = ConstantExpression(False)
+        c = ConstantExpression(None)
+        node_type = BinaryExpression.Or
+
+        expr = BinaryExpression(node_type, BinaryExpression(node_type, a, b), c)
+
+        self.assertEquals("((True or False) or None)", str(expr))
 
 if __name__ == '__main__':
     unittest.main()

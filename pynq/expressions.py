@@ -53,6 +53,7 @@ class BinaryExpression(Expression):
     
     #Bitwise
     And = "And"
+    Or = "Or"
     
     #operation representations
     representations = {
@@ -63,6 +64,7 @@ class BinaryExpression(Expression):
                         Power:"^",
                         Modulo:"%",
                         And:"and",
+                        Or: "or",
                       }
     
     def __init__(self, node_type, lhs, rhs):

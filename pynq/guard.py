@@ -28,4 +28,5 @@ class Guard(object):
                 break
 
         if not argument_is_of_types:
-            raise ValueError(message and message or "One of the arguments should be of types %s and it isn't." % ", ".join(types))
+            error_message = "One of the arguments should be of types %s and it isn't."
+            raise ValueError(message and message or error_message % ", ".join([str(tp) for tp in types]))

@@ -36,6 +36,17 @@ class TestGuard(BaseUnitTest):
         self.assertRaisesEx(ValueError, req.do, None, exc_pattern=re.compile("Argument a is required"))
         self.assertRaisesEx(ValueError, req.do, "", exc_pattern=re.compile("Argument a is required"))
 
+    def test_required_argument_with_default_message(self):
+        class WithRequiredArgument:
+            def do(self, a):
+                Guard.against_empty(a)
+                pass
+
+        req = WithRequiredArgument()
+        req.do("10")
+        self.assertRaisesEx(ValueError, req.do, None, exc_pattern=re.compile("One of the arguments is required and was not filled."))
+        self.assertRaisesEx(ValueError, req.do, "", exc_pattern=re.compile("One of the arguments is required and was not filled."))
+
     def test_is_of_type(self):
         class WithTypeArgument:
             def do(self, a):
@@ -46,6 +57,19 @@ class TestGuard(BaseUnitTest):
         req.do(10.0)
         self.assertRaisesEx(ValueError, req.do, "a", exc_pattern=re.compile("Argument a must be an integer or a float"))
         self.assertRaisesEx(ValueError, req.do, (10,20), exc_pattern=re.compile("Argument a must be an integer or a float"))
+
+    def test_is_of_type_with_default_message(self):
+        class WithTypeArgument:
+            def do(self, a):
+                Guard.accepts(a, (int, float))
+                pass
+                
+        msg = "One of the arguments should be of types %s and it isn't." % ", ".join((str(int), str(float)))
+        req = WithTypeArgument()
+        req.do(10)
+        req.do(10.0)
+        self.assertRaisesEx(ValueError, req.do, "a", exc_pattern=re.compile(msg))
+        self.assertRaisesEx(ValueError, req.do, (10,20), exc_pattern=re.compile(msg))
 
 if __name__ == '__main__':
     unittest.main()

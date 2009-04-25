@@ -5,6 +5,13 @@ Microsoft created Linq (Language Integrated Query) using Expression trees, which
 
 Pynq is an implementation in Python of the Expression Tree theory and some of the providers. There will be more providers gradually, but Pynq will strive to make it as easy as possible to write your own provider.
 
+TODO
+----
+
+I'm not sure yet that I'll need those,.but I think I'll probably do:
+
+* Binary Expression for ArrayIndex_
+
 Expressions not implemented
 ---------------------------
 
@@ -25,4 +32,5 @@ So far the following expressions aren't (and probably won't be) implemented:
 .. _ExclusiveOr: http://msdn.microsoft.com/en-us/library/system.linq.expressions.expressiontype.exclusiveor.aspx
 .. _LeftShift: http://msdn.microsoft.com/en-us/library/system.linq.expressions.expressiontype.leftshift.aspx
 .. _RightShift: http://msdn.microsoft.com/en-us/library/system.linq.expressions.expressiontype.rightshift.aspx
+.. _ArrayIndex: http://msdn.microsoft.com/en-us/library/system.linq.expressions.expression.arrayindex.aspx
 

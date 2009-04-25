@@ -43,11 +43,14 @@ class ConstantExpression(Expression):
 class UnaryExpression(Expression):
     #operation types
     CollectionLength = "CollectionLength"
+    Negate = "Negate"
     
     #operation representations
     representations = {
-                        CollectionLength:"len(%s)"
+                        CollectionLength:"len(%s)",
+                        Negate:"negate(%s)",
                       }
+                      
     def __init__(self, node_type, rhs):
         '''Initializes the UnaryExpression with the specified arguments.
         Arguments:
@@ -55,9 +58,10 @@ class UnaryExpression(Expression):
             rhs - Right-hand site of the operation. Since this is an unary operation, this is the only argument.
         '''
         Guard.against_empty(node_type, "The UnaryExpression node type is required")
-        Guard.accepts(rhs, (ConstantExpression,), "The CollectionLength unary expression can only take ConstantExpressions that hold tuples or lists as parameters.")
-        if not isinstance(rhs.evaluate(), (list, tuple)):
-            raise ValueError("The CollectionLength unary expression can only take ConstantExpressions that hold tuples or lists as parameters.")
+        if node_type == self.CollectionLength:
+            Guard.accepts(rhs, (ConstantExpression,), "The CollectionLength unary expression can only take ConstantExpressions that hold tuples or lists as parameters.")
+            if not isinstance(rhs.evaluate(), (list, tuple)):
+                raise ValueError("The CollectionLength unary expression can only take ConstantExpressions that hold tuples or lists as parameters.")
         self.node_type = node_type
         self.rhs = rhs
 

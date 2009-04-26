@@ -26,6 +26,8 @@ So far the following expressions aren't (and probably won't be) implemented:
 * RightShift_
 * Convert_
 * ConvertChecked_
+* UnaryPlus_
+* TypeAs_
 
 .. _AddChecked: http://msdn.microsoft.com/en-us/library/system.linq.expressions.expressiontype.addchecked.aspx
 .. _MultiplyChecked: http://msdn.microsoft.com/en-us/library/system.linq.expressions.expressiontype.multiplychecked.aspx
@@ -37,4 +39,5 @@ So far the following expressions aren't (and probably won't be) implemented:
 .. _ArrayIndex: http://msdn.microsoft.com/en-us/library/system.linq.expressions.expression.arrayindex.aspx
 .. _Convert: http://msdn.microsoft.com/en-us/library/system.linq.expressions.expressiontype.convert.aspx
 .. _ConvertChecked: http://msdn.microsoft.com/en-us/library/system.linq.expressions.expressiontype.convertchecked.aspx
-
+.. _UnaryPlus: http://msdn.microsoft.com/en-us/library/bb534288.aspx
+.. _TypeAs: http://msdn.microsoft.com/en-us/library/system.linq.expressions.expressiontype.typeas.aspx

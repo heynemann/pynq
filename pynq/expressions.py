@@ -44,11 +44,13 @@ class UnaryExpression(Expression):
     #operation types
     CollectionLength = "CollectionLength"
     Negate = "Negate"
+    Not = "Not"
     
     #operation representations
     representations = {
                         CollectionLength:"len(%s)",
                         Negate:"negate(%s)",
+                        Not:"(not %s)",
                       }
                       
     def __init__(self, node_type, rhs):

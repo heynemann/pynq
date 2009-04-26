@@ -85,5 +85,40 @@ class TestUnaryExpressions(BaseUnitTest):
 
         self.assertEquals("negate(negate(10))", str(expr))
 
+#Negate
+    def test_expression_not_of_a_constant(self):
+        a = ConstantExpression(True)
+        node_type = UnaryExpression.Not
+        expr = UnaryExpression(node_type, a)
+
+        self.assertEquals(expr.node_type, node_type)
+        self.assertEquals(expr.rhs, a)
+
+    def test_expression_not_of_a_constant_representation(self):
+        a = ConstantExpression(True)
+        node_type = UnaryExpression.Not
+        expr = UnaryExpression(node_type, a)
+        
+        self.assertEquals("(not True)", str(expr))
+
+    def test_nested_not_expression(self):
+        a = ConstantExpression(True)
+        node_type = UnaryExpression.Not
+
+        expr = UnaryExpression(node_type, UnaryExpression(node_type, a))
+
+        self.assertEquals(expr.node_type, node_type)
+        self.failUnless(isinstance(expr.rhs, UnaryExpression), "The right-hand side of the unary expression should be an unary expression as well, but is %s" % expr.rhs.__class__)
+        self.assertEquals(expr.rhs.node_type, node_type)
+        self.assertEquals(expr.rhs.rhs, a)
+    
+    def test_nested_not_expression_representation(self):
+        a = ConstantExpression(True)
+        node_type = UnaryExpression.Not
+
+        expr = UnaryExpression(node_type, UnaryExpression(node_type, a))
+
+        self.assertEquals("(not (not True))", str(expr))
+
 if __name__ == '__main__':
     unittest.main()

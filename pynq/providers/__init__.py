@@ -13,24 +13,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import sys
-from os.path import dirname, abspath, join
-root_path = abspath(join(dirname(__file__), "../../"))
-sys.path.insert(0, root_path)
+class IPynqProvider(object):
+    def parse(tree):
+        pass
 
-from pynq.providers import CollectionProvider
-
-def From(provider):
-   return Query(provider)
-
-class Query(object):
-   def __init__(self, provider):
-      if isinstance(provider, (list, tuple)):
-         self.provider = CollectionProvider()
-      else:
-         self.provider = provider
-      self.expressions = [] 
-      
-   def where(self, clause):
-      self.expressions.append(ExpressionParser.parse(clause))
-      return self
+class CollectionProvider(IPynqProvider):
+    pass

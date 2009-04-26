@@ -30,6 +30,10 @@ operations_to_test = {
     BinaryExpression.Divide : (("1/2", "1", "2"), ("1 / 2", "1", "2")),
     BinaryExpression.Power : (("1**2", "1", "2"), ("1 ** 2", "1", "2")),
     BinaryExpression.Modulo : (("1%2", "1", "2"), ("1 % 2", "1", "2")),
+    BinaryExpression.And : (("1 and 2", "1", "2"),),
+    BinaryExpression.Or : (("1 or 2", "1", "2"),),
+    BinaryExpression.Equal : (("1==2", "1", "2"),("1 == 2", "1", "2"),),
+    BinaryExpression.NotEqual : (("1!=2", "1", "2"),("1 != 2", "1", "2"),),
 }
 
 def test_for_null():

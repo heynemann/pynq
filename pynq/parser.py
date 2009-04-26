@@ -31,6 +31,10 @@ class ExpressionParser(object):
             "/":OperatorDivToken,
             "%":OperatorModToken,
             "**":OperatorPowerToken,
+            "and":OperatorAndToken,
+            "or":OperatorOrToken,
+            "==":OperatorEqualToken,
+            "!=":OperatorNotEqualToken,
         }
         
     def expression(self, rbp=0):
@@ -68,9 +72,15 @@ class ExpressionParser(object):
             tokenize.OP: "(operator)",
             tokenize.NAME: "(name)",
         }
+        
+        special_operators = ("and","or")
+        
         for t in tokenize.generate_tokens(StringIO(program).next):
             try:
-                yield type_map[t[0]], t[1]
+                if t[0] == tokenize.NAME and t[1] in special_operators:
+                    yield type_map[tokenize.OP], t[1]
+                else:
+                    yield type_map[t[0]], t[1]
             except KeyError:
                 if t[0] == tokenize.ENDMARKER:
                     break
@@ -120,6 +130,26 @@ class OperatorPowerToken(base_token):
     lbp = 140
     def led(self, left):
         return BinaryExpression(BinaryExpression.Power, left, self.expression(self.lbp-1))
+
+class OperatorAndToken(base_token):
+    lbp = 40
+    def led(self, left):
+        return BinaryExpression(BinaryExpression.And, left, self.expression(self.lbp-1))
+
+class OperatorOrToken(base_token):
+    lbp = 30
+    def led(self, left):
+        return BinaryExpression(BinaryExpression.Or, left, self.expression(self.lbp-1))
+
+class OperatorEqualToken(base_token):
+    lbp = 60
+    def led(self, left):
+        return BinaryExpression(BinaryExpression.Equal, left, self.expression(self.lbp))
+
+class OperatorNotEqualToken(base_token):
+    lbp = 60
+    def led(self, left):
+        return BinaryExpression(BinaryExpression.NotEqual, left, self.expression(self.lbp))
 
 class end_token(base_token):
     lbp = 0

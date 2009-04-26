@@ -85,11 +85,7 @@ class BinaryExpression(Expression):
     #Bitwise
     And = "And"
     Or = "Or"
-    
-    #Boolean Conditional
-    AndAlso = "AndAlso"
-    OrElse = "OrElse"
-    
+        
     #Comparison Operators
     Equal = "Equal"
     NotEqual = "NotEqual"
@@ -108,8 +104,6 @@ class BinaryExpression(Expression):
                         Modulo:"%",
                         And:"and",
                         Or: "or",
-                        AndAlso:"and also",
-                        OrElse: "or else",
                         Equal: "==",
                         NotEqual: "!=",
                         GreaterThan: ">",

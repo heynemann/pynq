@@ -40,31 +40,31 @@ operations_to_test = {
     BinaryExpression.LessThanOrEqual : (("1<=2", "1", "2"),("1 <= 2", "1", "2"),),
 }
 
-def test_for_null():
+def test_for_null_for_binary_expressions():
     for operation in operations_to_test.keys():
         for combination in operations_to_test[operation]:
             program, lhs, rhs = combination
             yield assert_not_null, program, operation, lhs, rhs
 
-def test_for_type_of_expression():
+def test_for_type_of_expression_for_binary_expressions():
     for operation in operations_to_test.keys():
         for combination in operations_to_test[operation]:
             program, lhs, rhs = combination
             yield assert_is_binary_expression, program, operation, lhs, rhs
 
-def test_for_type_of_expression():
+def test_for_type_of_expression_for_binary_expressions():
     for operation in operations_to_test.keys():
         for combination in operations_to_test[operation]:
             program, lhs, rhs = combination
             yield assert_is_constant_expression_on_both_sides, program, operation, lhs, rhs
 
-def test_for_values():
+def test_for_values_for_binary_expressions():
     for operation in operations_to_test.keys():
         for combination in operations_to_test[operation]:
             program, lhs, rhs = combination
             yield assert_values_on_both_sides, program, operation, lhs, rhs
 
-def test_for_node_type():
+def test_for_node_type_for_binary_expressions():
     for operation in operations_to_test.keys():
         for combination in operations_to_test[operation]:
             program, lhs, rhs = combination

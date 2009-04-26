@@ -20,7 +20,7 @@ from os.path import dirname, abspath, join
 root_path = abspath(join(dirname(__file__), "../../"))
 sys.path.insert(0, root_path)
 
-from pynq.expressions import ConstantExpression, BinaryExpression
+from pynq.expressions import ConstantExpression, BinaryExpression, UnaryExpression
 
 class ExpressionParser(object):
     def __init__(self):
@@ -39,6 +39,7 @@ class ExpressionParser(object):
             ">=":OperatorGreaterThanOrEqualToken,
             "<":OperatorLessThanToken,
             "<=":OperatorLessThanOrEqualToken,
+            "not":OperatorNotToken,
         }
     
     def advance(id=None):
@@ -73,7 +74,7 @@ class ExpressionParser(object):
             elif id == "(end)":
                 yield end_token(self.expression, self.advance)
             else:
-                raise SyntaxError("unknown operator: %r" % value)
+                raise SyntaxError("unknown operator: %r %r" % (id, value))
 
     def __tokenize_python(self, program):
         type_map = {
@@ -83,7 +84,7 @@ class ExpressionParser(object):
             tokenize.NAME: "(name)",
         }
         
-        special_operators = ("and","or")
+        special_operators = ("and","or","not")
         
         for t in tokenize.generate_tokens(StringIO(program).next):
             try:
@@ -182,6 +183,10 @@ class OperatorLessThanOrEqualToken(base_token):
     def led(self, left):
         return BinaryExpression(BinaryExpression.LessThanOrEqual, left, self.expression(self.lbp))
 
+class OperatorNotToken(base_token):
+    lbp = 60
+    def nud(self):
+        return UnaryExpression(UnaryExpression.Not, self.expression(self.lbp))
 
 class end_token(base_token):
     lbp = 0

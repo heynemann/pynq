@@ -23,6 +23,16 @@ sys.path.insert(0, root_path)
 from pynq.expressions import ConstantExpression, BinaryExpression
 
 class ExpressionParser(object):
+    def __init__(self):
+        self.operators = {
+            "+":OperatorAddToken,
+            "-":OperatorSubToken,
+            "*":OperatorMulToken,
+            "/":OperatorDivToken,
+            "%":OperatorModToken,
+            "**":OperatorPowerToken,
+        }
+        
     def expression(self, rbp=0):
         global token
         t = token
@@ -44,18 +54,12 @@ class ExpressionParser(object):
         for id, value in self.__tokenize_python(program):
             if id == "(literal)":
                 yield literal_token(self.expression, value)
-            elif id == "(operator)" and value == "+":
-                yield operator_add_token(self.expression)
-            elif id == "(operator)" and value == "-":
-                yield operator_sub_token(self.expression)
-            elif id == "(operator)" and value == "*":
-                yield operator_mul_token(self.expression)
-            elif id == "(operator)" and value == "/":
-                yield operator_div_token(self.expression)
+            elif id == "(operator)" and self.operators.has_key(value):
+                yield self.operators[value](self.expression)
             elif id == "(end)":
                 yield end_token(self.expression)
             else:
-                raise SyntaxError("unknown operator: %r" % id)
+                raise SyntaxError("unknown operator: %r" % value)
 
     def __tokenize_python(self, program):
         type_map = {
@@ -85,27 +89,37 @@ class literal_token(base_token):
     def nud(self):
         return ConstantExpression(self.value)
 
-class operator_add_token(base_token):
-    lbp = 10
+class OperatorAddToken(base_token):
+    lbp = 110
     def led(self, left):
         return BinaryExpression(BinaryExpression.Add, left, self.expression(self.lbp))
 
-class operator_sub_token(base_token):
-    lbp = 10
+class OperatorSubToken(base_token):
+    lbp = 110
     def nud(self):
-        return UnaryExpression(UnaryExpression.Negate, self.expression(self.lbp))
+        return UnaryExpression(UnaryExpression.Negate, self.expression(self.lbp+20))
     def led(self, left):
         return BinaryExpression(BinaryExpression.Subtract, left, self.expression(self.lbp))
 
-class operator_mul_token(base_token):
-    lbp = 20
+class OperatorMulToken(base_token):
+    lbp = 120
     def led(self, left):
         return BinaryExpression(BinaryExpression.Multiply, left, self.expression(self.lbp))
 
-class operator_div_token(base_token):
-    lbp = 20
+class OperatorDivToken(base_token):
+    lbp = 120
     def led(self, left):
         return BinaryExpression(BinaryExpression.Divide, left, self.expression(self.lbp))
+
+class OperatorModToken(base_token):
+    lbp = 130
+    def led(self, left):
+        return BinaryExpression(BinaryExpression.Modulo, left, self.expression(self.lbp))
+
+class OperatorPowerToken(base_token):
+    lbp = 140
+    def led(self, left):
+        return BinaryExpression(BinaryExpression.Power, left, self.expression(self.lbp-1))
 
 class end_token(base_token):
     lbp = 0

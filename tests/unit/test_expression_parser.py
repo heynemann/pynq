@@ -24,36 +24,43 @@ from pynq.expressions import BinaryExpression, ConstantExpression
 
 parser = ExpressionParser()
 operations_to_test = {
-    BinaryExpression.Add : ("1+2", "1", "2"),
-    BinaryExpression.Subtract : ("1-2", "1", "2"),
-    BinaryExpression.Multiply : ("1*2", "1", "2"),
-    BinaryExpression.Divide : ("1/2", "1", "2")
+    BinaryExpression.Add : (("1+2", "1", "2"), ("1 + 2", "1", "2")),
+    BinaryExpression.Subtract : (("1-2", "1", "2"), ("1 - 2", "1", "2")),
+    BinaryExpression.Multiply : (("1*2", "1", "2"), ("1 * 2", "1", "2")),
+    BinaryExpression.Divide : (("1/2", "1", "2"), ("1 / 2", "1", "2")),
+    BinaryExpression.Power : (("1**2", "1", "2"), ("1 ** 2", "1", "2")),
+    BinaryExpression.Modulo : (("1%2", "1", "2"), ("1 % 2", "1", "2")),
 }
 
 def test_for_null():
     for operation in operations_to_test.keys():
-        program, lhs, rhs = operations_to_test[operation]
-        yield assert_not_null, program, operation, lhs, rhs
+        for combination in operations_to_test[operation]:
+            program, lhs, rhs = combination
+            yield assert_not_null, program, operation, lhs, rhs
 
 def test_for_type_of_expression():
     for operation in operations_to_test.keys():
-        program, lhs, rhs = operations_to_test[operation]
-        yield assert_is_binary_expression, program, operation, lhs, rhs
+        for combination in operations_to_test[operation]:
+            program, lhs, rhs = combination
+            yield assert_is_binary_expression, program, operation, lhs, rhs
 
 def test_for_type_of_expression():
     for operation in operations_to_test.keys():
-        program, lhs, rhs = operations_to_test[operation]
-        yield assert_is_constant_expression_on_both_sides, program, operation, lhs, rhs
+        for combination in operations_to_test[operation]:
+            program, lhs, rhs = combination
+            yield assert_is_constant_expression_on_both_sides, program, operation, lhs, rhs
 
 def test_for_values():
     for operation in operations_to_test.keys():
-        program, lhs, rhs = operations_to_test[operation]
-        yield assert_values_on_both_sides, program, operation, lhs, rhs
+        for combination in operations_to_test[operation]:
+            program, lhs, rhs = combination
+            yield assert_values_on_both_sides, program, operation, lhs, rhs
 
 def test_for_node_type():
     for operation in operations_to_test.keys():
-        program, lhs, rhs = operations_to_test[operation]
-        yield assert_node_type, program, operation, lhs, rhs
+        for combination in operations_to_test[operation]:
+            program, lhs, rhs = combination
+            yield assert_node_type, program, operation, lhs, rhs
 
 #Asserts
 def assert_not_null(program, node_type, lhs, rhs):
@@ -78,3 +85,6 @@ def assert_node_type(program, node_type, lhs, rhs):
     tree = parser.parse(program)
     assert tree.node_type == node_type, "The tree node type should be %s and was %s" % (node_type, tree.node_type)
 
+if __name__ == '__main__':
+    import nose
+    nose.main()

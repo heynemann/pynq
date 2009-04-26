@@ -34,6 +34,10 @@ operations_to_test = {
     BinaryExpression.Or : (("1 or 2", "1", "2"),),
     BinaryExpression.Equal : (("1==2", "1", "2"),("1 == 2", "1", "2"),),
     BinaryExpression.NotEqual : (("1!=2", "1", "2"),("1 != 2", "1", "2"),),
+    BinaryExpression.GreaterThan : (("1>2", "1", "2"),("1 > 2", "1", "2"),),
+    BinaryExpression.GreaterThanOrEqual : (("1>=2", "1", "2"),("1 >= 2", "1", "2"),),
+    BinaryExpression.LessThan : (("1<2", "1", "2"),("1 < 2", "1", "2"),),
+    BinaryExpression.LessThanOrEqual : (("1<=2", "1", "2"),("1 <= 2", "1", "2"),),
 }
 
 def test_for_null():

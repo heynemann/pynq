@@ -35,8 +35,18 @@ class ExpressionParser(object):
             "or":OperatorOrToken,
             "==":OperatorEqualToken,
             "!=":OperatorNotEqualToken,
+            ">":OperatorGreaterThanToken,
+            ">=":OperatorGreaterThanOrEqualToken,
+            "<":OperatorLessThanToken,
+            "<=":OperatorLessThanOrEqualToken,
         }
-        
+    
+    def advance(id=None):
+        global token
+        if id and token.id != id:
+            raise SyntaxError("Expected %r" % id)
+        token = next()
+    
     def expression(self, rbp=0):
         global token
         t = token
@@ -57,11 +67,11 @@ class ExpressionParser(object):
     def __tokenize(self, program):
         for id, value in self.__tokenize_python(program):
             if id == "(literal)":
-                yield literal_token(self.expression, value)
+                yield literal_token(self.expression, self.advance, value)
             elif id == "(operator)" and self.operators.has_key(value):
-                yield self.operators[value](self.expression)
+                yield self.operators[value](self.expression, self.advance)
             elif id == "(end)":
-                yield end_token(self.expression)
+                yield end_token(self.expression, self.advance)
             else:
                 raise SyntaxError("unknown operator: %r" % value)
 
@@ -89,12 +99,13 @@ class ExpressionParser(object):
         yield "(end)", "(end)"
 
 class base_token(object):
-    def __init__(self, expression):
+    def __init__(self, expression, advance):
         self.expression = expression
+        self.advance = advance
 
 class literal_token(base_token):
-    def __init__(self, expression, value):
-        super(literal_token, self).__init__(expression)
+    def __init__(self, expression, advance, value):
+        super(literal_token, self).__init__(expression, advance)
         self.value = value
     def nud(self):
         return ConstantExpression(self.value)
@@ -150,6 +161,27 @@ class OperatorNotEqualToken(base_token):
     lbp = 60
     def led(self, left):
         return BinaryExpression(BinaryExpression.NotEqual, left, self.expression(self.lbp))
+
+class OperatorGreaterThanToken(base_token):
+    lbp = 60
+    def led(self, left):
+        return BinaryExpression(BinaryExpression.GreaterThan, left, self.expression(self.lbp))
+
+class OperatorGreaterThanOrEqualToken(base_token):
+    lbp = 60
+    def led(self, left):
+        return BinaryExpression(BinaryExpression.GreaterThanOrEqual, left, self.expression(self.lbp))
+
+class OperatorLessThanToken(base_token):
+    lbp = 60
+    def led(self, left):
+        return BinaryExpression(BinaryExpression.LessThan, left, self.expression(self.lbp))
+
+class OperatorLessThanOrEqualToken(base_token):
+    lbp = 60
+    def led(self, left):
+        return BinaryExpression(BinaryExpression.LessThanOrEqual, left, self.expression(self.lbp))
+
 
 class end_token(base_token):
     lbp = 0

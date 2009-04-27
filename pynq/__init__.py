@@ -20,12 +20,15 @@ sys.path.insert(0, root_path)
 
 from pynq.providers import CollectionProvider
 from pynq.parser import ExpressionParser
+from pynq.guard import Guard
 
 def From(provider):
    return Query(provider)
 
 class Query(object):
    def __init__(self, provider):
+      error_message = "The provider cannot be None. If you meant to use the CollectionProvider pass in a tuple or list"
+      Guard.against_none(provider, error_message)
       if isinstance(provider, (list, tuple)):
          self.provider = CollectionProvider()
       else:

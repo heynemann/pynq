@@ -22,10 +22,31 @@ sys.path.insert(0, root_path)
 
 from pynq import From, Query
 from pynq.expressions import Expression, ConstantExpression, BinaryExpression, GetAttributeExpression, NameExpression
+from pynq.providers import CollectionProvider
 from base import BaseUnitTest
 
 class TestPynqFactory(BaseUnitTest):
 
+    def test_from_returns_query(self):
+        query = From([])
+        assert isinstance(query, Query)
+    
+    def test_from_with_empty_provider_raises(self):
+        error = "The provider cannot be None. If you meant to use the CollectionProvider pass in a tuple or list"
+        self.assertRaisesEx(ValueError, From, None, exc_pattern=re.compile(error))        
+    
+    def test_passing_tuple_returns_collection_provider(self):
+        query = From(tuple([]))
+        assert isinstance(query.provider, CollectionProvider)
+        
+    def test_passing_list_returns_collection_provider(self):
+        query = From([])
+        assert isinstance(query.provider, CollectionProvider)
+    
+    def test_specifying_provider_keeps_provider_in_the_tree(self):
+        query = From("provider")
+        assert query.provider == "provider"
+        
     def test_where_binary_equals_returns_tree(self):
         col = []
         tree = From(col).where("some.other.property == 'Bernardo'")

@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-# -*- coding:utf-8 -*-
+#-*- coding:utf-8 -*-
 
 # Licensed under the Open Software License ("OSL") v. 3.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -13,26 +13,21 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import unittest
 import sys
 from os.path import dirname, abspath, join
 root_path = abspath(join(dirname(__file__), "../../"))
 sys.path.insert(0, root_path)
 
-from pynq.providers import CollectionProvider
-from pynq.parser import ExpressionParser
+from pynq.expressions import NameExpression
 
-def From(provider):
-   return Query(provider)
+class TestNameExpression(unittest.TestCase):
 
-class Query(object):
-   def __init__(self, provider):
-      if isinstance(provider, (list, tuple)):
-         self.provider = CollectionProvider()
-      else:
-         self.provider = provider
-      self.expressions = [] 
-      self.parser = ExpressionParser()
-      
-   def where(self, clause):
-      self.expressions.append(self.parser.parse(clause))
-      return self
+    def test_name_expression(self):
+        expression = NameExpression("somename")
+        assert expression.name == "somename", "The name of the" \
+                                               " variable in this expression should be" \
+                                               " 'somename' but was %s" % expression.name
+    
+if __name__ == '__main__':
+    unittest.main()

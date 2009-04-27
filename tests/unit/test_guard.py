@@ -25,6 +25,17 @@ from base import BaseUnitTest
 
 class TestGuard(BaseUnitTest):
 
+    def test_required_list_argument(self):
+        class WithRequiredArgument:
+            def __init__(self, a):
+                Guard.against_empty(a, "Argument a is required")
+                pass
+
+        req = WithRequiredArgument(("some tuple",))
+        self.assertRaisesEx(ValueError, WithRequiredArgument, tuple([]), exc_pattern=re.compile("Argument a is required"))
+        self.assertRaisesEx(ValueError, WithRequiredArgument, [], exc_pattern=re.compile("Argument a is required"))
+        self.assertRaisesEx(ValueError, WithRequiredArgument, {}, exc_pattern=re.compile("Argument a is required"))
+
     def test_required_argument(self):
         class WithRequiredArgument:
             def do(self, a):

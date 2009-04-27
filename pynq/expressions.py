@@ -40,6 +40,23 @@ class ConstantExpression(Expression):
         return unicode(self.value)
     __str__ = __unicode__
 
+class NameExpression(Expression):
+    def __init__(self, name):
+        self.name = name
+
+class GetAttributeExpression(Expression):
+    def __init__(self, *args):
+        Guard.against_empty(args, "In order to create a new attribute expression you need to provide some attributes.")
+        self.attributes = []
+        self.add_attributes(args)
+
+    def add_attributes(self, attrs):
+        for attr in attrs:
+            if isinstance(attr, GetAttributeExpression):
+                self.add_attributes(attr.attributes)
+            else:
+                self.attributes.append(attr)
+
 class UnaryExpression(Expression):
     #operation types
     CollectionLength = "CollectionLength"

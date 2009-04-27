@@ -30,7 +30,7 @@ class Query(object):
       error_message = "The provider cannot be None. If you meant to use the CollectionProvider pass in a tuple or list"
       Guard.against_none(provider, error_message)
       if isinstance(provider, (list, tuple)):
-         self.provider = CollectionProvider()
+         self.provider = CollectionProvider(provider)
       else:
          self.provider = provider
       self.expressions = [] 

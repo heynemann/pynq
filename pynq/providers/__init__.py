@@ -14,8 +14,12 @@
 # limitations under the License.
 
 class IPynqProvider(object):
-    def parse(tree):
+    def parse(self, query):
         pass
 
 class CollectionProvider(IPynqProvider):
-    pass
+    def __init__(self, collection):
+        self.collection = collection
+    
+    def parse(self, query):
+        return list(self.collection)

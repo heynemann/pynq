@@ -37,12 +37,16 @@ class ConstantExpression(Expression):
         return self.value
 
     def __unicode__(self):
-        return unicode(self.value)
+        return unicode("%s" % self.value)
     __str__ = __unicode__
 
 class NameExpression(Expression):
     def __init__(self, name):
         self.name = name
+
+    def __unicode__(self):
+        return unicode(self.name)
+    __str__ = __unicode__
 
 class GetAttributeExpression(Expression):
     def __init__(self, *args):
@@ -56,6 +60,10 @@ class GetAttributeExpression(Expression):
                 self.add_attributes(attr.attributes)
             else:
                 self.attributes.append(attr)
+
+    def __unicode__(self):
+        return unicode(".".join(self.attributes))
+    __str__ = __unicode__
 
 class UnaryExpression(Expression):
     #operation types

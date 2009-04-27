@@ -113,8 +113,6 @@ class LiteralToken(BaseToken):
     def __init__(self, id, expression, advance, value):
         super(LiteralToken, self).__init__(id, expression, advance)
         self.value = value
-        if self.value.startswith("'") and self.value.endswith("'"):
-            self.value = self.value[1:-1]
 
     def nud(self):
         return ConstantExpression(self.value)

@@ -100,7 +100,7 @@ class TestPynqFactory(BaseUnitTest):
         col = []
         tree = From(col).where("some.other.property == 'Bernardo'")
 
-        assert tree.expressions[0].rhs.value == "Bernardo"
+        assert tree.expressions[0].rhs.value == "'Bernardo'"
         
 if __name__ == '__main__':
     unittest.main()

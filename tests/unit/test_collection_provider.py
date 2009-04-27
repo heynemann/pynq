@@ -30,5 +30,26 @@ class TestCollectionProvider(unittest.TestCase):
         provider = query.provider
         assert isinstance(provider.parse(query), list)
         
+    def test_collection_provider_filters_using_binary_expression(self):
+        col = ["a","b"]
+        query = From(col).where("item == 'a'")
+        provider = query.provider
+        result = provider.parse(query)
+        assert result == ['a'], "The collection was not filtered properly and now is: %s" % result
+
+    def test_collection_provider_filters_using_binary_expression_for_numbers(self):
+        col = [1, 2, 10, 11, 12]
+        query = From(col).where("item > 10")
+        provider = query.provider
+        result = provider.parse(query)
+        assert result == [11, 12], "The collection was not filtered properly and now is: %s" % result
+
+    def test_collection_provider_parses_query_using_lesser_than(self):
+        col = range(5)
+        query = From(col).where("item <= 3")
+        provider = query.provider
+        result = provider.parse(query)
+        assert result == range(4), "The collection was not filtered properly and now is: %s" % result
+
 if __name__ == '__main__':
     unittest.main()

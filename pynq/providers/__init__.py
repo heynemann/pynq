@@ -13,6 +13,13 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import sys
+from os.path import dirname, abspath, join
+root_path = abspath(join(dirname(__file__), "../../"))
+sys.path.insert(0, root_path)
+
+import pynq.providers
+
 class IPynqProvider(object):
     def parse(self, query):
         pass
@@ -20,6 +27,17 @@ class IPynqProvider(object):
 class CollectionProvider(IPynqProvider):
     def __init__(self, collection):
         self.collection = collection
-    
+
     def parse(self, query):
-        return list(self.collection)
+        processed_collection = list(self.collection)
+        for expression in query.expressions:
+            klass = getattr(pynq.providers, expression.__class__.__name__ + "Processor")
+            processed_collection = klass.process(processed_collection, expression)
+
+        return processed_collection
+
+class BinaryExpressionProcessor(object):
+    @classmethod
+    def process(cls, collection, expression):
+        filters = str(expression)
+        return [item for item in collection if eval(filters)]

@@ -29,5 +29,9 @@ class TestNameExpression(unittest.TestCase):
                                                " variable in this expression should be" \
                                                " 'somename' but was %s" % expression.name
     
+    def test_name_expression_string_repr(self):
+        expression = NameExpression("somename")
+        assert str(expression) == "somename"
+
 if __name__ == '__main__':
     unittest.main()

@@ -204,12 +204,14 @@ class OperatorNotToken(BaseToken):
         return UnaryExpression(UnaryExpression.Not, self.expression(self.lbp))
 
 class DotToken(BaseToken):
+    global token
     lbp = 150
     def led(self, left):
         first = left
         second = token
         if not isinstance(second, NameToken):
-            raise ValueError("Each part of a given get attribute expression (some.variable.value) needs to be a NameExpression.")
+            error = u"Each part of a given get attribute expression (some.variable.value) needs to be a NameExpression."
+            raise ValueError(error)
         second = NameExpression(second.value)
         self.advance()
         

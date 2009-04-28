@@ -85,7 +85,7 @@ run_functional: compile
 	@if [ "$(nocoverage)" = "true" ]; then echo 'Coverage Disabled.'; fi
 	@echo
 	
-codeanalyis:
+codeanalysis:
 	@echo "Generating code analysis..."
 	@sloccount ${root_dir}
 	

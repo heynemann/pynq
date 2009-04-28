@@ -41,7 +41,8 @@ class ExpressionParser(object):
             "<":OperatorLessThanToken,
             "<=":OperatorLessThanOrEqualToken,
             "not":OperatorNotToken,
-            ".":DotToken
+            ".":DotToken,
+            "(":LeftParenthesisToken,
         }
     
     def advance(self, id=None):
@@ -55,6 +56,11 @@ class ExpressionParser(object):
         t = token
         token = next()
         left = t.nud()
+
+        while isinstance(left, RightParenthesisToken):
+            token = next()
+            left = t.nud()
+
         while rbp < token.lbp:
             t = token
             token = next()
@@ -71,6 +77,8 @@ class ExpressionParser(object):
         for id, value in self.__tokenize_python(program):
             if id == "(literal)":
                 yield LiteralToken(id, self.expression, self.advance, value)
+            elif value == ")":
+                yield RightParenthesisToken(")", self.expression, self.advance)
             elif id == "(operator)" and self.operators.has_key(value):
                 yield self.operators[value](id, self.expression, self.advance)
             elif id == "(end)":
@@ -110,6 +118,7 @@ class BaseToken(object):
         self.advance = advance
 
 class LiteralToken(BaseToken):
+    lbp = 0
     def __init__(self, id, expression, advance, value):
         super(LiteralToken, self).__init__(id, expression, advance)
         self.value = value
@@ -214,6 +223,19 @@ class DotToken(BaseToken):
         self.advance()
         
         return GetAttributeExpression(first, second)
+
+class LeftParenthesisToken(BaseToken):
+    lbp = 150
+    def nud(self):
+        middle = self.expression()
+        self.advance(")")
+        return middle
+
+class RightParenthesisToken(BaseToken):
+    lbp = 0
+    
+    def nud(self):
+        return self
 
 class end_token(BaseToken):
     lbp = 0

@@ -145,8 +145,8 @@ class BinaryExpression(Expression):
             rhs - Right-hand site of the operation (as in the second argument)
         '''
         Guard.against_empty(node_type, "The BinaryExpression node type is required")
-        Guard.accepts(lhs, (Expression,), "Lhs must be an expression (an instance of a class that inherits from pynq.Expression)")
-        Guard.accepts(rhs, (Expression,), "Rhs must be an expression (an instance of a class that inherits from pynq.Expression)")
+        Guard.accepts(lhs, (Expression,), "Lhs must be an expression (an instance of a class that inherits from pynq.Expression), but was %s" % lhs.__class__.__name__)
+        Guard.accepts(rhs, (Expression,), "Rhs must be an expression (an instance of a class that inherits from pynq.Expression) but was %s" % rhs.__class__.__name__)
         self.node_type = node_type
         self.lhs = lhs
         self.rhs = rhs

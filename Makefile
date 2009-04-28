@@ -15,6 +15,8 @@ compile_log_file=${build_dir}/compile.log
 unit_log_file=${build_dir}/unit.log
 functional_log_file=${build_dir}/functional.log
 
+code_analysis_log_file=${build_dir}/codeanalyis.log
+
 nocoverage=false
 
 help:
@@ -30,6 +32,7 @@ help:
 	@echo "    test             runs all tests (unit and functional)"
 	@echo "    unit             runs all unit tests"
 	@echo "    functional       runs all functional tests"
+	@echo "    codeanalyis      generates code analysis info"
 	@echo
 
 # orchestrator targets
@@ -84,3 +87,6 @@ run_functional: compile
 	@if [ "$(nocoverage)" = "true" ]; then echo 'Coverage Disabled.'; fi
 	@echo
 	
+codeanalyis:
+	@echo "Generating code analysis..."
+	@sloccount ${root_dir} >> ${code_analysis_log_file}

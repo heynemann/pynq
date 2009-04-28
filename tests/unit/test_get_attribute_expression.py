@@ -40,6 +40,10 @@ class TestGetAttributeExpression(BaseUnitTest):
         assert expression.attributes[0] == "some"
         assert expression.attributes[1] == "weird"
         assert expression.attributes[2] == "expression"
+        
+    def test_get_attribute_returns_the_proper_representation(self):
+        expression = GetAttributeExpression(GetAttributeExpression("some","weird"), "expression")
+        assert str(expression) == "some.weird.expression"
     
 if __name__ == '__main__':
     unittest.main()

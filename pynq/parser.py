@@ -233,9 +233,6 @@ class LeftParenthesisToken(BaseToken):
 
 class RightParenthesisToken(BaseToken):
     lbp = 0
-    
-    def nud(self):
-        return self
 
 class end_token(BaseToken):
     lbp = 0

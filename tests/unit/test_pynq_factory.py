@@ -102,5 +102,23 @@ class TestPynqFactory(BaseUnitTest):
 
         assert tree.expressions[0].rhs.value == "'Bernardo'"
         
+    def test_select_many_returns_proper_results_for_numbers(self):
+        items = From([1,2,3,4,5]).where("item > 2 and item < 4").select_many()
+        assert items == [3], "Only item 3 should be in the resulting collection but it was %s." % ",".join(items)
+
+    def test_select_many_returns_proper_results_for_sub_property(self):
+        class SomeElement(object):
+            def __init__(self, value):
+                self.value = value
+            def __str__(self):
+                return str(self.value)
+        
+        col = [SomeElement(1), SomeElement(2), SomeElement(3), SomeElement(4), SomeElement(5)]
+        
+        items = From(col).where("item.value > 2 and item.value < 4").select_many()
+        
+        assert len(items) == 1, "Only item 3 should be in the resulting collection, but it has length of %d" % len(items)
+        assert items[0].value == 3, "Only item 3 should be in the resulting collection but it was %s." % items[0].value
+
 if __name__ == '__main__':
     unittest.main()

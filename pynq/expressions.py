@@ -44,9 +44,11 @@ class NameExpression(Expression):
     def __init__(self, name):
         self.name = name
 
+    def __str__(self):
+        return self.__unicode__()
+        
     def __unicode__(self):
         return unicode(self.name)
-    __str__ = __unicode__
 
 class GetAttributeExpression(Expression):
     def __init__(self, *args):
@@ -62,7 +64,7 @@ class GetAttributeExpression(Expression):
                 self.attributes.append(attr)
 
     def __unicode__(self):
-        return unicode(".".join(self.attributes))
+        return unicode(".".join([str(attr) for attr in self.attributes]))
     __str__ = __unicode__
 
 class UnaryExpression(Expression):

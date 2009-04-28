@@ -23,19 +23,22 @@ from pynq.parser import ExpressionParser
 from pynq.guard import Guard
 
 def From(provider):
-   return Query(provider)
+    return Query(provider)
 
 class Query(object):
-   def __init__(self, provider):
-      error_message = "The provider cannot be None. If you meant to use the CollectionProvider pass in a tuple or list"
-      Guard.against_none(provider, error_message)
-      if isinstance(provider, (list, tuple)):
-         self.provider = CollectionProvider(provider)
-      else:
-         self.provider = provider
-      self.expressions = [] 
-      self.parser = ExpressionParser()
+    def __init__(self, provider):
+        error_message = "The provider cannot be None. If you meant to use the CollectionProvider pass in a tuple or list"
+        Guard.against_none(provider, error_message)
+        if isinstance(provider, (list, tuple)):
+            self.provider = CollectionProvider(provider)
+        else:
+            self.provider = provider
+        self.expressions = [] 
+        self.parser = ExpressionParser()
       
-   def where(self, clause):
-      self.expressions.append(self.parser.parse(clause))
-      return self
+    def where(self, clause):
+        self.expressions.append(self.parser.parse(clause))
+        return self
+    
+    def select_many(self):
+        return self.provider.parse(self)

@@ -15,8 +15,6 @@ compile_log_file=${build_dir}/compile.log
 unit_log_file=${build_dir}/unit.log
 functional_log_file=${build_dir}/functional.log
 
-code_analysis_log_file=${build_dir}/codeanalyis.log
-
 nocoverage=false
 
 help:
@@ -89,4 +87,5 @@ run_functional: compile
 	
 codeanalyis:
 	@echo "Generating code analysis..."
-	@sloccount ${root_dir} >> ${code_analysis_log_file}
+	@sloccount ${root_dir}
+	

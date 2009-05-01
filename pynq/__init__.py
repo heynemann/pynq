@@ -40,5 +40,22 @@ class Query(object):
         self.expressions.append(self.parser.parse(clause))
         return self
     
+    def select(self, *args):
+        class DynamicItem(object):
+            pass
+
+        fields = list(args)
+        
+        col = self.provider.parse(self)
+        
+        items = []
+        for item in col:
+            new_item = DynamicItem()
+            for field in fields:
+                setattr(new_item, field, getattr(item, field))
+            items.append(new_item)
+        
+        return items
+        
     def select_many(self):
         return self.provider.parse(self)

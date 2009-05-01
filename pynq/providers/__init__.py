@@ -28,11 +28,28 @@ class CollectionProvider(IPynqProvider):
     def __init__(self, collection):
         self.collection = collection
 
+    def compare_items(self, a, b):
+        expression = None
+        for order_expression in self.order_expressions:
+            if order_expression.startswith("-"):
+                field = order_expression[1:]
+                result = cmp(-getattr(a, field), -getattr(b, field))
+            else:
+                result = cmp(getattr(a, order_expression), getattr(b, order_expression))
+
+            expression = expression is None and result or (expression or result)
+
+        return expression
+
     def parse(self, query):
         processed_collection = list(self.collection)
         for expression in query.expressions:
             klass = getattr(pynq.providers, expression.__class__.__name__ + "Processor")
             processed_collection = klass.process(processed_collection, expression)
+
+        if query.order_expressions:
+            self.order_expressions = query.order_expressions
+            processed_collection.sort(self.compare_items)
 
         return processed_collection
 

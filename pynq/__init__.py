@@ -34,12 +34,18 @@ class Query(object):
         else:
             self.provider = provider
         self.expressions = [] 
+        self.order_expressions = []
         self.parser = ExpressionParser()
       
     def where(self, clause):
         self.expressions.append(self.parser.parse(clause))
         return self
     
+    def order_by(self, *args):
+        for arg in args:
+            self.order_expressions.append(arg)
+        return self
+
     def select(self, *args):
         class DynamicItem(object):
             pass

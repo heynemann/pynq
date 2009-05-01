@@ -45,20 +45,28 @@ class TestSelectFields(unittest.TestCase):
         assert len(filtered) == 3, "There should be three items in the filtered collection."
 
     def test_select_returns_dynamic_items(self):
-        filtered = From(self.col).select("first","second")        
+        filtered = From(self.col).select("first","second")
         for i in range(3):
             assert filtered[i].__class__.__name__ == "DynamicItem"
 
     def test_select_returns_proper_values(self):
-        filtered = From(self.col).select("first","second")        
+        filtered = From(self.col).select("first","second")
         for i in range(3):
             assert filtered[i].first == i * 3 + 1
             assert filtered[i].second == i * 3 + 2
 
     def test_select_returns_class_without_third_attribute(self):
-        filtered = From(self.col).select("first","second")        
+        filtered = From(self.col).select("first","second")
         for i in range(3):
             assert not hasattr(filtered[i], "third")
-            
+    
+    def test_selecting_twice_returns_different_objects(self):
+        filtered = From(self.col).select("first","second")
+        filtered2 = From(self.col).select("first")
+        
+        for i in range(3):
+            assert not hasattr(filtered2[i], "second")
+            assert not hasattr(filtered2[i], "third")
+
 if __name__ == '__main__':
     unittest.main()

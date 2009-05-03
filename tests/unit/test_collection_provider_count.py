@@ -28,5 +28,9 @@ class TestPynqFactoryCount(unittest.TestCase):
         total = From([1,2,3]).count()
         assert total == 3, "Total should be 3 but was %s" % total
         
+    def test_returns_right_count_for_filtered_collection(self):
+        total = From([1,2,3]).where("item >= 2").count()
+        assert total == 2, "Total should be 2 but was %s" % total
+    
 if __name__ == '__main__':
     unittest.main()

@@ -103,6 +103,9 @@ sdist:
 	@python setup.py sdist
 
 deb:
+	@echo "=============================="
+	@echo "Generating Debian Distribution"
+	@echo "=============================="
 	mv .git /tmp/pynq_git
 	debuild
 	mkdir -p dist

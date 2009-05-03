@@ -2,3 +2,7 @@
 *~
 build/
 .coverage
+dist/
+Pynq.egg-info/
+debian/python-pynq*
+python-build-stamp-2.6

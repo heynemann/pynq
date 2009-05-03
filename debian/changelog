@@ -1,0 +1,9 @@
+python-pynq (0.1.0) dev; urgency=high
+
+  * Initial release.
+  * Supports where clause
+  * Supports order_by clause
+  * Supports select clause
+  * Supports select_many clause
+
+ -- Bernardo Heynemann <heynemann@gmail.com>  Sat, 02 May 2009 23:28:00 -0300

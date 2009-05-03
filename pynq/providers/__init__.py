@@ -41,7 +41,7 @@ class CollectionProvider(IPynqProvider):
 
         return expression
 
-    def parse(self, query):
+    def parse(self, query, cols = None):
         processed_collection = list(self.collection)
         for expression in query.expressions:
             #klass = getattr(pynq.providers, expression.__class__.__name__ + "Processor")
@@ -52,7 +52,25 @@ class CollectionProvider(IPynqProvider):
             self.order_expressions = query.order_expressions
             processed_collection.sort(self.compare_items)
 
+        if cols:
+            processed_collection = self.transform_collection(processed_collection, cols)
+
         return processed_collection
+    
+    def transform_collection(self, col, cols):
+        class DynamicItem(object):
+            pass
+
+        fields = list(cols)
+                
+        items = []
+        for item in col:
+            new_item = DynamicItem()
+            for field in fields:
+                setattr(new_item, field, getattr(item, field))
+            items.append(new_item)
+        
+        return items
 
 class BinaryExpressionProcessor(object):
     @classmethod

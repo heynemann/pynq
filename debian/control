@@ -1,0 +1,18 @@
+Source: python-pynq
+Section: python
+Priority: optional
+Maintainer: Bernardo Heynemann <heynemann@gmail.com>
+Uploaders: Bernardo Heynemann <heynemann@gmail.com>
+Standards-Version: 3.8.0
+Build-Depends: debhelper (>= 7), python, cdbs, python-setuptools, python-support
+Build-Depends-Indep: 
+Homepage: http://github.com/heynemann/pynq/tree
+Vcs-Git: git://github.com/heynemann/pynq.git
+Vcs-Browser: http://github.com/heynemann/pynq/tree/master
+
+Package: python-pynq
+Architecture: all
+Depends: ${misc:Depends}, ${python:Depends}
+Recommends:
+Suggests:
+Description: Pynq is a python implementation of the Language Integrated Query framework for .Net.

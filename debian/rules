@@ -1,0 +1,11 @@
+#!/usr/bin/make -f
+
+DEB_PYTHON_SYSTEM := pysupport
+DEB_PYTHON_MODULE_PACKAGE = python-pynq
+
+include /usr/share/cdbs/1/rules/buildcore.mk
+include /usr/share/cdbs/1/rules/debhelper.mk
+include /usr/share/cdbs/1/class/python-distutils.mk
+
+build/python-pynq::
+	make all

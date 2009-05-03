@@ -47,21 +47,7 @@ class Query(object):
         return self
 
     def select(self, *args):
-        class DynamicItem(object):
-            pass
-
-        fields = list(args)
-        
-        col = self.provider.parse(self)
-        
-        items = []
-        for item in col:
-            new_item = DynamicItem()
-            for field in fields:
-                setattr(new_item, field, getattr(item, field))
-            items.append(new_item)
-        
-        return items
+        return self.provider.parse(self, cols=args)
         
     def select_many(self):
         return self.provider.parse(self)

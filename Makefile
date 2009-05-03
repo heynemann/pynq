@@ -31,6 +31,8 @@ help:
 	@echo "    unit             runs all unit tests"
 	@echo "    functional       runs all functional tests"
 	@echo "    codeanalyis      generates code analysis info"
+	@echo "    sdist            creates a source-based distribution"
+	@echo "    deb              creates a debian-based distribution"
 	@echo
 
 # orchestrator targets
@@ -44,7 +46,7 @@ prepare_build: clean create_build_dir
 
 test: run_unit run_functional
 
-clean: remove_build_dir
+clean: remove_build_dir remove_dist_dir
 
 # action targets
 
@@ -53,6 +55,10 @@ report_success:
 
 remove_build_dir:
 	@rm -fr ${build_dir}
+
+remove_dist_dir:
+	@rm -fr dist/
+	@rm -fr Pynq.egg-info/
 
 create_build_dir:
 	@mkdir -p ${build_dir}
@@ -88,4 +94,19 @@ run_functional: compile
 codeanalysis:
 	@echo "Generating code analysis..."
 	@sloccount ${root_dir}
-	
+
+sdist:
+	@echo "===================================="
+	@echo "Generating Source-Based Distribution"
+	@echo "===================================="
+	@rm -fr dist
+	@python setup.py sdist
+
+deb:
+	mv .git /tmp/pynq_git
+	debuild
+	mkdir -p dist
+	cp ../python-pynq_* ./dist
+	rm -f ../python-pynq_*
+	debuild clean
+	mv /tmp/pynq_git .git

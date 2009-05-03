@@ -81,6 +81,24 @@ class TestGuard(BaseUnitTest):
         req.do(10.0)
         self.assertRaisesEx(ValueError, req.do, "a", exc_pattern=re.compile(msg))
         self.assertRaisesEx(ValueError, req.do, (10,20), exc_pattern=re.compile(msg))
+    
+    def test_accepts_only_with_message(self):
+        items = ["a", "b"]
+        items_failing = ["a", "b", 1]
+        message = "There should be only strings."
+        
+        Guard.accepts_only(items, [str], message)
+        
+        self.assertRaisesEx(ValueError, Guard.accepts_only, items_failing, [str], message, exc_pattern=re.compile(message))
 
+    def test_accepts_only_without_message(self):
+        items = ["a", "b"]
+        items_failing = ["a", "b", 1]
+        message = u"All arguments in the given collection should be of type\(s\) \[str\] and at least one of them isn't."
+        
+        Guard.accepts_only(items, [str])
+        
+        self.assertRaisesEx(ValueError, Guard.accepts_only, items_failing, [str], exc_pattern=re.compile(message))
+        
 if __name__ == '__main__':
     unittest.main()

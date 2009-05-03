@@ -21,11 +21,13 @@ sys.path.insert(0, root_path)
 from pynq.providers import CollectionProvider
 from pynq.parser import ExpressionParser
 from pynq.guard import Guard
+from pynq.expressions import Expression
+from pynq.enums import Actions
 
 def From(provider):
     return Query(provider)
 
-class Query(object):
+class Query(object):    
     def __init__(self, provider):
         error_message = "The provider cannot be None. If you meant to use the CollectionProvider pass in a tuple or list"
         Guard.against_none(provider, error_message)
@@ -46,8 +48,21 @@ class Query(object):
             self.order_expressions.append(arg)
         return self
 
-    def select(self, *args):
-        return self.provider.parse(self, cols=args)
+    def select(self, *cols):
+        empty_message = "Selecting with no fields is not valid. " \
+                                  + "When using From(provider).select method, " \
+                                  + "please provide a list of expressions or strings as fields."
+        Guard.against_empty(cols, empty_message)
+        for col in cols:
+            Guard.against_empty(col, empty_message)
+        Guard.accepts_only(cols, [str, Expression], "Selecting with invalid type. " \
+                                                    + "When using From(provider).select method, " \
+                                                    + "please provide a list of expressions or strings as fields.")
+                                                    
+        return self.provider.parse(self, action=Actions.Select, cols=cols)
         
     def select_many(self):
-        return self.provider.parse(self)
+        return self.provider.parse(self, action=Actions.SelectMany)
+
+    def count(self):
+        return self.provider.parse(self, action=Actions.Count)

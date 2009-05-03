@@ -18,7 +18,7 @@ from os.path import dirname, abspath, join
 root_path = abspath(join(dirname(__file__), "../../"))
 sys.path.insert(0, root_path)
 
-import pynq.providers
+from pynq.enums import Actions
 
 class IPynqProvider(object):
     def parse(self, query):
@@ -41,7 +41,17 @@ class CollectionProvider(IPynqProvider):
 
         return expression
 
-    def parse(self, query, cols = None):
+    def parse(self, query, action, **kwargs):
+        if action == Actions.SelectMany:
+            return self.parse_select_many(query)
+        elif action == Actions.Select:
+            return self.parse_select(query, kwargs["cols"])
+        elif action == Actions.Count:
+            return self.parse_count(query)
+        else:
+            raise ValueError("Invalid action exception. %s is unknown." % action)
+        
+    def parse_select_many(self, query):
         processed_collection = list(self.collection)
         for expression in query.expressions:
             #klass = getattr(pynq.providers, expression.__class__.__name__ + "Processor")
@@ -52,11 +62,14 @@ class CollectionProvider(IPynqProvider):
             self.order_expressions = query.order_expressions
             processed_collection.sort(self.compare_items)
 
-        if cols:
-            processed_collection = self.transform_collection(processed_collection, cols)
-
         return processed_collection
     
+    def parse_select(self, query, cols):
+        return self.transform_collection(self.parse_select_many(query), cols)
+    
+    def parse_count(self, query):
+        return len(self.parse_select_many(query))
+
     def transform_collection(self, col, cols):
         class DynamicItem(object):
             pass

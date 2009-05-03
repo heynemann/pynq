@@ -37,3 +37,22 @@ class Guard(object):
         if not argument_is_of_types:
             error_message = "One of the arguments should be of types %s and it isn't."
             raise ValueError(message and message or error_message % ", ".join([str(tp) for tp in types]))
+
+    @classmethod
+    def accepts_only(cls, arguments, types, message=None):
+        all_arguments_are_of_type = True
+        
+        for argument in arguments:
+            argument_is_of_types = False
+            for argument_type in types:
+                if isinstance(argument, argument_type):
+                    argument_is_of_types = True
+                    break
+            if not argument_is_of_types:
+                all_arguments_are_of_type = False
+                break
+        
+        if not all_arguments_are_of_type:
+            error_message = u"All arguments in the given collection should be of type(s) [%s] and at least one of them isn't."
+            raise ValueError(message and message or error_message % ", ".join([tp.__name__ for tp in types]))
+

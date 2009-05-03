@@ -44,7 +44,8 @@ class CollectionProvider(IPynqProvider):
     def parse(self, query):
         processed_collection = list(self.collection)
         for expression in query.expressions:
-            klass = getattr(pynq.providers, expression.__class__.__name__ + "Processor")
+            #klass = getattr(pynq.providers, expression.__class__.__name__ + "Processor")
+            klass = BinaryExpressionProcessor()
             processed_collection = klass.process(processed_collection, expression)
 
         if query.order_expressions:

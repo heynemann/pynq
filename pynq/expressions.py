@@ -127,7 +127,7 @@ class BinaryExpression(Expression):
                         Subtract:"-",
                         Multiply:"*",
                         Divide:"/",
-                        Power:"^",
+                        Power:"**",
                         Modulo:"%",
                         And:"and",
                         Or: "or",

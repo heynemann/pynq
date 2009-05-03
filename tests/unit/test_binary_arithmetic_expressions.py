@@ -31,7 +31,7 @@ class TestBinaryArithmeticExpression(BaseUnitTest):
         b = "20"
         b_expr = ConstantExpression(20)
         node_type = BinaryExpression.Add
-        
+
         self.assertRaisesEx(ValueError, BinaryExpression, node_type, a, b_expr, exc_pattern=re.compile("Lhs must be an expression \(an instance of a class that inherits from pynq.Expression\)"))
         self.assertRaisesEx(ValueError, BinaryExpression, node_type, a_expr, b, exc_pattern=re.compile("Rhs must be an expression \(an instance of a class that inherits from pynq.Expression\)"))
         self.assertRaisesEx(ValueError, BinaryExpression, None, a_expr, b_expr, exc_pattern=re.compile("The BinaryExpression node type is required"))
@@ -52,7 +52,7 @@ class TestBinaryArithmeticExpression(BaseUnitTest):
         b = ConstantExpression(20)
         node_type = BinaryExpression.Add
         expr = BinaryExpression(node_type, a, b)
-        
+
         self.assertEquals("(10 + 20)", str(expr))
 
     def test_nested_addition_expression(self):
@@ -69,7 +69,7 @@ class TestBinaryArithmeticExpression(BaseUnitTest):
         self.assertEquals(expr.lhs.lhs, a)
         self.assertEquals(expr.lhs.rhs, b)
         self.assertEquals(expr.rhs, c)
-    
+
     def test_nested_addition_expression_representation(self):
         a = ConstantExpression(10)
         b = ConstantExpression(20)
@@ -97,7 +97,7 @@ class TestBinaryArithmeticExpression(BaseUnitTest):
         b = ConstantExpression(20)
         node_type = BinaryExpression.Subtract
         expr = BinaryExpression(node_type, a, b)
-        
+
         self.assertEquals("(10 - 20)", str(expr))
 
     def test_nested_subtraction_expression(self):
@@ -114,7 +114,7 @@ class TestBinaryArithmeticExpression(BaseUnitTest):
         self.assertEquals(expr.lhs.lhs, a)
         self.assertEquals(expr.lhs.rhs, b)
         self.assertEquals(expr.rhs, c)
-    
+
     def test_nested_subtraction_expression_representation(self):
         a = ConstantExpression(10)
         b = ConstantExpression(20)
@@ -141,7 +141,7 @@ class TestBinaryArithmeticExpression(BaseUnitTest):
         b = ConstantExpression(20)
         node_type = BinaryExpression.Multiply
         expr = BinaryExpression(node_type, a, b)
-        
+
         self.assertEquals("(10 * 20)", str(expr))
 
     def test_nested_multiplication_expression(self):
@@ -158,7 +158,7 @@ class TestBinaryArithmeticExpression(BaseUnitTest):
         self.assertEquals(expr.lhs.lhs, a)
         self.assertEquals(expr.lhs.rhs, b)
         self.assertEquals(expr.rhs, c)
-    
+
     def test_nested_multiplication_expression_representation(self):
         a = ConstantExpression(10)
         b = ConstantExpression(20)
@@ -185,7 +185,7 @@ class TestBinaryArithmeticExpression(BaseUnitTest):
         b = ConstantExpression(20)
         node_type = BinaryExpression.Divide
         expr = BinaryExpression(node_type, a, b)
-        
+
         self.assertEquals("(10 / 20)", str(expr))
 
     def test_nested_division_expression(self):
@@ -202,7 +202,7 @@ class TestBinaryArithmeticExpression(BaseUnitTest):
         self.assertEquals(expr.lhs.lhs, a)
         self.assertEquals(expr.lhs.rhs, b)
         self.assertEquals(expr.rhs, c)
-    
+
     def test_nested_division_expression_representation(self):
         a = ConstantExpression(10)
         b = ConstantExpression(20)
@@ -229,8 +229,8 @@ class TestBinaryArithmeticExpression(BaseUnitTest):
         b = ConstantExpression(20)
         node_type = BinaryExpression.Power
         expr = BinaryExpression(node_type, a, b)
-        
-        self.assertEquals("(10 ^ 20)", str(expr))
+
+        self.assertEquals("(10 ** 20)", str(expr))
 
     def test_nested_power_expression(self):
         a = ConstantExpression(10)
@@ -246,7 +246,7 @@ class TestBinaryArithmeticExpression(BaseUnitTest):
         self.assertEquals(expr.lhs.lhs, a)
         self.assertEquals(expr.lhs.rhs, b)
         self.assertEquals(expr.rhs, c)
-    
+
     def test_nested_power_expression_representation(self):
         a = ConstantExpression(10)
         b = ConstantExpression(20)
@@ -255,7 +255,7 @@ class TestBinaryArithmeticExpression(BaseUnitTest):
 
         expr = BinaryExpression(node_type, BinaryExpression(node_type, a, b), c)
 
-        self.assertEquals("((10 ^ 20) ^ 30)", str(expr))
+        self.assertEquals("((10 ** 20) ** 30)", str(expr))
 
 #Modulus
     def test_expression_for_modulus_of_two_constants(self):
@@ -273,7 +273,7 @@ class TestBinaryArithmeticExpression(BaseUnitTest):
         b = ConstantExpression(20)
         node_type = BinaryExpression.Modulo
         expr = BinaryExpression(node_type, a, b)
-        
+
         self.assertEquals("(10 % 20)", str(expr))
 
     def test_nested_modulus_expression(self):
@@ -290,7 +290,7 @@ class TestBinaryArithmeticExpression(BaseUnitTest):
         self.assertEquals(expr.lhs.lhs, a)
         self.assertEquals(expr.lhs.rhs, b)
         self.assertEquals(expr.rhs, c)
-    
+
     def test_nested_modulus_expression_representation(self):
         a = ConstantExpression(10)
         b = ConstantExpression(20)
@@ -304,3 +304,4 @@ class TestBinaryArithmeticExpression(BaseUnitTest):
 
 if __name__ == '__main__':
     unittest.main()
+

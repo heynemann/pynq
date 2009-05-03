@@ -38,7 +38,7 @@ class Query(object):
         self.parser = ExpressionParser()
       
     def where(self, clause):
-        self.expressions.append(self.parser.parse(clause))
+        self.expressions.append(self.parser.parse(clause.strip()))
         return self
     
     def order_by(self, *args):

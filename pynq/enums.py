@@ -19,3 +19,4 @@ class Actions(object):
     Count = "Count"
     Max = "Max"
     Min = "Min"
+    Sum = "Sum"

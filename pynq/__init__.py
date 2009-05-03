@@ -72,3 +72,6 @@ class Query(object):
         
     def min(self):
         return self.provider.parse(self, action=Actions.Min)
+    
+    def sum(self):
+        return self.provider.parse(self, action=Actions.Sum)

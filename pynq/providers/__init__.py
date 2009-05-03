@@ -52,6 +52,8 @@ class CollectionProvider(IPynqProvider):
             return self.parse_max(query)
         elif action == Actions.Min:
             return self.parse_min(query)
+        elif action == Actions.Sum:
+            return self.parse_sum(query)
         else:
             raise ValueError("Invalid action exception. %s is unknown." % action)
         
@@ -79,6 +81,9 @@ class CollectionProvider(IPynqProvider):
 
     def parse_min(self, query):
         return min(self.parse_select_many(query))
+
+    def parse_sum(self, query):
+        return sum(self.parse_select_many(query))
 
     def transform_collection(self, col, cols):
         class DynamicItem(object):

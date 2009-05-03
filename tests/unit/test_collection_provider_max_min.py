@@ -28,6 +28,10 @@ class TestPynqFactoryMaxMin(unittest.TestCase):
         greater = From([1,2,3]).max()
         assert greater == 3, "greater should be 3 but was %s" % greater
         
+    def test_returns_right_max_for_full_collection_of_strings(self):
+        greater = From(["b","a","c"]).max()
+        assert greater == "c", "greater should be 'c' but was %s" % greater
+        
     def test_returns_right_max_for_filtered_collection(self):
         greater = From([1,2,3]).where("item <= 2").max()
         assert greater == 2, "greater should be 2 but was %s" % greater
@@ -35,6 +39,10 @@ class TestPynqFactoryMaxMin(unittest.TestCase):
     def test_returns_right_min_for_full_collection(self):
         lesser = From([1,2,3]).min()
         assert lesser == 1, "lesser should be 1 but was %s" % lesser
+
+    def test_returns_right_min_for_full_collection_of_strings(self):
+        lesser = From(["b","a","c"]).min()
+        assert lesser == "a", "lesser should be 'a' but was %s" % lesser
         
     def test_returns_right_max_for_filtered_collection(self):
         lesser = From([1,2,3]).where("item >= 2").min()

@@ -48,6 +48,10 @@ class CollectionProvider(IPynqProvider):
             return self.parse_select(query, kwargs["cols"])
         elif action == Actions.Count:
             return self.parse_count(query)
+        elif action == Actions.Max:
+            return self.parse_max(query)
+        elif action == Actions.Min:
+            return self.parse_min(query)
         else:
             raise ValueError("Invalid action exception. %s is unknown." % action)
         
@@ -69,6 +73,12 @@ class CollectionProvider(IPynqProvider):
     
     def parse_count(self, query):
         return len(self.parse_select_many(query))
+
+    def parse_max(self, query):
+        return max(self.parse_select_many(query))
+
+    def parse_min(self, query):
+        return min(self.parse_select_many(query))
 
     def transform_collection(self, col, cols):
         class DynamicItem(object):

@@ -66,3 +66,9 @@ class Query(object):
 
     def count(self):
         return self.provider.parse(self, action=Actions.Count)
+        
+    def max(self):
+        return self.provider.parse(self, action=Actions.Max)
+        
+    def min(self):
+        return self.provider.parse(self, action=Actions.Min)

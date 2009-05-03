@@ -17,3 +17,5 @@ class Actions(object):
     Select = "Select"
     SelectMany = "SelectMany"
     Count = "Count"
+    Max = "Max"
+    Min = "Min"

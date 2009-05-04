@@ -13,12 +13,14 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import operator
 import sys
 from os.path import dirname, abspath, join
 root_path = abspath(join(dirname(__file__), "../../"))
 sys.path.insert(0, root_path)
 
 from pynq.enums import Actions
+from pynq.guard import Guard
 
 class IPynqProvider(object):
     def parse(self, query):
@@ -54,13 +56,14 @@ class CollectionProvider(IPynqProvider):
             return self.parse_min(query)
         elif action == Actions.Sum:
             return self.parse_sum(query)
+        elif action == Actions.Avg:
+            return self.parse_avg(query, kwargs["column"])
         else:
             raise ValueError("Invalid action exception. %s is unknown." % action)
         
     def parse_select_many(self, query):
         processed_collection = list(self.collection)
         for expression in query.expressions:
-            #klass = getattr(pynq.providers, expression.__class__.__name__ + "Processor")
             klass = BinaryExpressionProcessor()
             processed_collection = klass.process(processed_collection, expression)
 
@@ -85,6 +88,33 @@ class CollectionProvider(IPynqProvider):
     def parse_sum(self, query):
         return sum(self.parse_select_many(query))
 
+    def parse_avg(self, query, column):
+        seq = self.parse_select_many(query)
+
+        if len(seq) == 0: 
+            return 0
+
+        error_message = "The attribute '%s' was not found in the specified collection's items. If you meant to use the raw value of each item in the collection just use the word 'item' as a parameter to .avg or use .avg()" % column
+
+        Guard.against_empty(column, error_message)
+
+        attribute = column.replace("item.","")            
+            
+        if "item." in column:
+            try:
+                seq = [self.rec_getattr(item, attribute) for item in seq]
+            except AttributeError:
+                raise ValueError(error_message)
+        else:
+            if attribute.lower() != "item":
+                raise ValueError(error_message)
+            
+        return reduce(operator.add,seq)/len(seq)
+       
+    def rec_getattr(self, obj, attr):
+        """Get object's attribute. May use dot notation."""
+        return reduce(getattr, attr.split('.'), obj)
+ 
     def transform_collection(self, col, cols):
         class DynamicItem(object):
             pass

@@ -75,3 +75,7 @@ class Query(object):
     
     def sum(self):
         return self.provider.parse(self, action=Actions.Sum)
+    
+    def avg(self, column = "item"):
+        return self.provider.parse(self, action=Actions.Avg, column=column)
+        

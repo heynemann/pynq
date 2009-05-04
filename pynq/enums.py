@@ -20,3 +20,4 @@ class Actions(object):
     Max = "Max"
     Min = "Min"
     Sum = "Sum"
+    Avg = "Avg"

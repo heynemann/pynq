@@ -49,12 +49,13 @@ class TestPynqFactorySumAvg(BaseUnitTest):
     def test_returns_right_amount_for_filtered_collection(self):
         total = From([1,2,3,4]).where("item >= 2").avg("item")
         assert total == 3, "total should be 3 but was %s" % total
-        
+
     def test_returns_right_amount_for_a_given_property(self):
         class OneValue(object):
             def __init__(self, value):
                 self.value = value
         total = From([OneValue(1), OneValue(2), OneValue(3)]).avg("item.value")
+        assert total == 2
 
     def test_returns_right_amount_for_a_given_sub_property(self):
         class OtherValue(object):
@@ -66,6 +67,7 @@ class TestPynqFactorySumAvg(BaseUnitTest):
                 self.value = OtherValue(value)
                 
         total = From([OneValue(1), OneValue(2), OneValue(3)]).avg("item.value.value")
+        assert total == 2
 
     def test_raises_for_an_invalid_property(self):
         error_message = "The attribute '%s' was not found in the specified collection's items. If you meant to use the raw value of each item in the collection just use the word 'item' as a parameter to .avg or use .avg()"

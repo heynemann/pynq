@@ -112,7 +112,6 @@ class CollectionProvider(IPynqProvider):
         return reduce(operator.add,seq)/len(seq)
        
     def rec_getattr(self, obj, attr):
-        """Get object's attribute. May use dot notation."""
         return reduce(getattr, attr.split('.'), obj)
  
     def transform_collection(self, col, cols):

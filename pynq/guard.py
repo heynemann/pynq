@@ -18,7 +18,7 @@ class Guard(object):
     def against_empty(cls, argument, message=None):
         if argument is None or str(argument) == "":
             raise ValueError(message and message or "One of the arguments is required and was not filled.")
-        if isinstance(argument, (list, tuple, dict)) and not argument:
+        if isinstance(argument, (list, tuple, dict)) and (not argument or not any(argument)):
             raise ValueError(message and message or "One of the arguments is required and was not filled.")
     
     @classmethod

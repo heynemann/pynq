@@ -91,15 +91,15 @@ class CollectionProvider(IPynqProvider):
     def parse_avg(self, query, column):
         seq = self.parse_select_many(query)
 
-        if len(seq) == 0: 
+        if len(seq) == 0:
             return 0
 
         error_message = "The attribute '%s' was not found in the specified collection's items. If you meant to use the raw value of each item in the collection just use the word 'item' as a parameter to .avg or use .avg()" % column
 
         Guard.against_empty(column, error_message)
 
-        attribute = column.replace("item.","")            
-            
+        attribute = column.replace("item.","")
+
         if "item." in column:
             try:
                 seq = [self.rec_getattr(item, attribute) for item in seq]
@@ -113,20 +113,20 @@ class CollectionProvider(IPynqProvider):
        
     def rec_getattr(self, obj, attr):
         return reduce(getattr, attr.split('.'), obj)
- 
+
     def transform_collection(self, col, cols):
         class DynamicItem(object):
             pass
 
         fields = list(cols)
-                
+
         items = []
         for item in col:
             new_item = DynamicItem()
             for field in fields:
                 setattr(new_item, field, getattr(item, field))
             items.append(new_item)
-        
+
         return items
 
 class BinaryExpressionProcessor(object):

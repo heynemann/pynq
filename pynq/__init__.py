@@ -27,7 +27,7 @@ from pynq.enums import Actions
 def From(provider):
     return Query(provider)
 
-class Query(object):    
+class Query(object):
     def __init__(self, provider):
         error_message = "The provider cannot be None. If you meant to use the CollectionProvider pass in a tuple or list"
         Guard.against_none(provider, error_message)
@@ -38,11 +38,11 @@ class Query(object):
         self.expressions = [] 
         self.order_expressions = []
         self.parser = ExpressionParser()
-      
+
     def where(self, clause):
         self.expressions.append(self.parser.parse(clause.strip()))
         return self
-    
+
     def order_by(self, *args):
         for arg in args:
             self.order_expressions.append(arg)
@@ -60,22 +60,22 @@ class Query(object):
                                                     + "please provide a list of expressions or strings as fields.")
                                                     
         return self.provider.parse(self, action=Actions.Select, cols=cols)
-        
+
     def select_many(self):
         return self.provider.parse(self, action=Actions.SelectMany)
 
     def count(self):
         return self.provider.parse(self, action=Actions.Count)
-        
-    def max(self):
-        return self.provider.parse(self, action=Actions.Max)
-        
-    def min(self):
-        return self.provider.parse(self, action=Actions.Min)
-    
-    def sum(self):
-        return self.provider.parse(self, action=Actions.Sum)
-    
-    def avg(self, column = "item"):
+
+    def max(self, column="item"):
+        return self.provider.parse(self, action=Actions.Max, column=column)
+
+    def min(self, column="item"):
+        return self.provider.parse(self, action=Actions.Min, column=column)
+
+    def sum(self, column="item"):
+        return self.provider.parse(self, action=Actions.Sum, column=column)
+
+    def avg(self, column="item"):
         return self.provider.parse(self, action=Actions.Avg, column=column)
-        
+

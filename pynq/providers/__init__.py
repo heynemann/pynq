@@ -51,11 +51,11 @@ class CollectionProvider(IPynqProvider):
         elif action == Actions.Count:
             return self.parse_count(query)
         elif action == Actions.Max:
-            return self.parse_max(query)
+            return self.parse_max(query, kwargs["column"])
         elif action == Actions.Min:
-            return self.parse_min(query)
+            return self.parse_min(query, kwargs["column"])
         elif action == Actions.Sum:
-            return self.parse_sum(query)
+            return self.parse_sum(query, kwargs["column"])
         elif action == Actions.Avg:
             return self.parse_avg(query, kwargs["column"])
         else:
@@ -79,14 +79,36 @@ class CollectionProvider(IPynqProvider):
     def parse_count(self, query):
         return len(self.parse_select_many(query))
 
-    def parse_max(self, query):
-        return max(self.parse_select_many(query))
+    def parse_max(self, query, column):
+        return self.__perform_operation_on_all(query, column, lambda items: max(items), "max")
 
-    def parse_min(self, query):
-        return min(self.parse_select_many(query))
+    def parse_min(self, query, column):
+        return self.__perform_operation_on_all(query, column, lambda items: min(items), "min")
 
-    def parse_sum(self, query):
-        return sum(self.parse_select_many(query))
+    def parse_sum(self, query, column):
+        return self.__perform_operation_on_all(query, column, lambda items: sum(items), "sum")
+
+    def __perform_operation_on_all(self, query, column, operation, command_name):
+        seq = self.parse_select_many(query)
+
+        if len(seq) == 0:
+            return 0
+
+        error_message = "The attribute '%s' was not found in the specified collection's items. If you meant to use the raw value of each item in the collection just use the word 'item' as a parameter to .%s or use .%s()" % (column, command_name, command_name)
+
+        Guard.against_empty(column, error_message)
+
+        attribute = column.replace("item.","")
+        if "item." in column:
+            try:
+                seq = [self.rec_getattr(item, attribute) for item in seq]
+            except AttributeError:
+                raise ValueError(error_message)
+        else:
+            if attribute.lower() != "item":
+                raise ValueError(error_message)
+
+        return operation(seq)
 
     def parse_avg(self, query, column):
         seq = self.parse_select_many(query)

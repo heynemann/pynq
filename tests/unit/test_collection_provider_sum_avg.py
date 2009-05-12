@@ -24,15 +24,56 @@ import re
 from pynq import From
 from base import BaseUnitTest
 
-class TestPynqFactorySumAvg(BaseUnitTest):
+class TestPynqFactorySum(BaseUnitTest):
 
-    def test_returns_right_sum_for_full_collection(self):
+    def test_sum_returns_right_amount_for_full_collection_with_no_keyword(self):
         total = From([1,2,3]).sum()
-        assert total == 6, "greater should be 6 but was %s" % total
+        assert total == 6, "total should be 6 but was %s" % total
+
+    def test_sum_returns_right_amount_for_filtered_collection_with_no_keyword(self):
+        total = From([1,2,3,4]).where("item >= 2").sum()
+        assert total == 9, "total should be 9 but was %s" % total
+
+    def test_sum_returns_right_amount_for_full_collection(self):
+        total = From([1,2,3]).sum("item")
+        assert total == 6, "total should be 6 but was %s" % total
+
+    def test_sum_returns_right_amount_for_filtered_collection(self):
+        total = From([1,2,3,4]).where("item >= 2").sum("item")
+        assert total == 9, "total should be 9 but was %s" % total
+
+    def test_sum_returns_right_amount_for_a_given_property(self):
+        class OneValue(object):
+            def __init__(self, value):
+                self.value = value
+        total = From([OneValue(1), OneValue(2), OneValue(3)]).sum("item.value")
+        assert total == 6, "total should be 6 but was %s" % total
+
+    def test_sum_returns_right_amount_for_a_given_sub_property(self):
+        class OtherValue(object):
+            def __init__(self, value):
+                self.value = value
                 
-    def test_returns_right_sum_for_filtered_collection(self):
-        total = From([1,2,3]).where("item <= 2").sum()
-        assert total == 3, "total should be 3 but was %s" % total
+        class OneValue(object):
+            def __init__(self, value):
+                self.value = OtherValue(value)
+                
+        total = From([OneValue(1), OneValue(2), OneValue(3)]).sum("item.value.value")
+        assert total == 6, "total should be 6 but was %s" % total
+
+    def test_sum_raises_for_an_invalid_property(self):
+        error_message = "The attribute '%s' was not found in the specified collection's items. If you meant to use the raw value of each item in the collection just use the word 'item' as a parameter to .sum or use .sum()"
+        
+        class OneValue(object):
+            def __init__(self, value):
+                self.value = value
+        fr = From([OneValue(1), OneValue(2), OneValue(3)])
+        self.assertRaisesEx(ValueError, fr.sum, "value", exc_pattern=re.compile(error_message % "value"))
+        self.assertRaisesEx(ValueError, fr.sum, "item.dumb", exc_pattern=re.compile(error_message % "item.dumb"))
+        self.assertRaisesEx(ValueError, fr.sum, "", exc_pattern=re.compile(error_message % ""))
+        self.assertRaisesEx(ValueError, fr.sum, None, exc_pattern=re.compile(error_message % "None"))
+
+class TestPynqFactoryAvg(BaseUnitTest):
 
     def test_avg_returns_right_amount_for_full_collection_with_no_keyword(self):
         total = From([1,2,3]).avg()

@@ -21,6 +21,7 @@ sys.path.insert(0, root_path)
 
 from pynq.enums import Actions
 from pynq.guard import Guard
+from pynq.expressions import NameExpression
 
 class IPynqProvider(object):
     def parse(self, query):
@@ -74,7 +75,8 @@ class CollectionProvider(IPynqProvider):
         return processed_collection
     
     def parse_select(self, query, cols):
-        return self.transform_collection(self.parse_select_many(query), cols)
+        columns = [query.parser.parse(col) for col in cols]
+        return self.transform_collection(self.parse_select_many(query), columns)
     
     def parse_count(self, query):
         return len(self.parse_select_many(query))
@@ -137,16 +139,18 @@ class CollectionProvider(IPynqProvider):
         return reduce(getattr, attr.split('.'), obj)
 
     def transform_collection(self, col, cols):
-        class DynamicItem(object):
-            pass
-
-        fields = list(cols)
+        dynamic_item = type('DynamicItem', (object,), {})
 
         items = []
         for item in col:
-            new_item = DynamicItem()
-            for field in fields:
-                setattr(new_item, field, getattr(item, field))
+            field_count = 0
+            new_item = dynamic_item()
+            for field in cols:
+                if isinstance(field, NameExpression):
+                    setattr(new_item, field.name, getattr(item, field.name))
+                else:
+                    setattr(new_item, "dynamic_%d" % field_count, eval(str(field)))
+                field_count += 1
             items.append(new_item)
 
         return items

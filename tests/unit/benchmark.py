@@ -23,15 +23,25 @@ from pynq import From
 
 ITERATIONS = 50000
 
-def main():
-    class OtherValue(object):
-        def __init__(self, value):
-            self.value = value
-            
-    class OneValue(object):
-        def __init__(self, value):
-            self.value = OtherValue(value)
+class OtherValue(object):
+    def __init__(self, value):
+        self.value = value
+        
+class OneValue(object):
+    def __init__(self, value):
+        self.value = OtherValue(value)
+        
+class TwoValues(object):
+    def __init__(self, value, value2):
+        self.value = value
+        self.value2 = value2
 
+def main():
+    run_many_small_collections()
+    run_two_big_collections()
+    select_expression_fields()
+
+def run_many_small_collections():
     start_time = time.time()
     
     fixed_col = [OneValue(1), OneValue(2), OneValue(3)]
@@ -41,6 +51,7 @@ def main():
 
     print "AVG FIXED COL OPERATION - %d iterations took %.2f" % (ITERATIONS, (time.time() - start_time))
 
+def run_two_big_collections():
     dynamic_col = [OneValue(item) for item in range(ITERATIONS/2)]
 
     start_time = time.time()
@@ -50,7 +61,17 @@ def main():
 
     print "AVG %d ITEMS OPERATION - 2 iterations took %.2f" % (ITERATIONS/2, (time.time() - start_time))
 
+def select_expression_fields():
+    two_values_col = [TwoValues(item, item + 2) for item in range(ITERATIONS/2)]
+
+    start_time = time.time()
+
+    for i in range(2):
+        total = From(two_values_col).select("item.value + item.value2", "item.value2 - item.value")
+
+    print "Selecting Two Expression Fields %d ITEMS OPERATION - 2 iterations took %.2f" % (ITERATIONS/2, (time.time() - start_time))
+
 if __name__ == '__main__':
-    sys.exit(main())
+    sys.exit(select_expression_fields())
 
 

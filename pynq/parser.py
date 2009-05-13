@@ -107,8 +107,6 @@ class ExpressionParser(object):
             except KeyError:
                 if t[0] == tokenize.ENDMARKER:
                     break
-                else:
-                    raise SyntaxError("Syntax error")
         yield "(end)", "(end)"
 
 class BaseToken(object):

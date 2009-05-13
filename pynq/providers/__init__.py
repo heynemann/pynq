@@ -142,16 +142,18 @@ class CollectionProvider(IPynqProvider):
         dynamic_item = type('DynamicItem', (object,), {})
 
         items = []
+        app = items.append
         for item in col:
             field_count = 0
             new_item = dynamic_item()
             for field in cols:
                 if isinstance(field, NameExpression):
-                    setattr(new_item, field.name, getattr(item, field.name))
+                    field_name = field.name
+                    setattr(new_item, field_name, getattr(item, field_name))
                 else:
                     setattr(new_item, "dynamic_%d" % field_count, eval(str(field)))
                 field_count += 1
-            items.append(new_item)
+            app(new_item)
 
         return items
 

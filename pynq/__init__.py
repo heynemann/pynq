@@ -45,7 +45,7 @@ class Query(object):
 
     def order_by(self, *args):
         for arg in args:
-            self.order_expressions.append(arg)
+            self.order_expressions.append(self.parser.parse(arg.strip()))
         return self
 
     def select(self, *cols):

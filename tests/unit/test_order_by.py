@@ -20,6 +20,7 @@ root_path = abspath(join(dirname(__file__), "../../"))
 sys.path.insert(0, root_path)
 
 from pynq import From
+from pynq.expressions import NameExpression
 
 class TestOrderBy(unittest.TestCase):
 
@@ -40,9 +41,13 @@ class TestOrderBy(unittest.TestCase):
         query = From([]).order_by("some")
         assert len(query.order_expressions) == 1
 
+    def test_adding_order_creates_a_name_expression_in_query(self):
+        query = From([]).order_by("some")
+        assert isinstance(query.order_expressions[0], NameExpression)
+
     def test_adding_order_keeps_the_right_value_in_query(self):
         query = From([]).order_by("some")
-        assert query.order_expressions[0] == "some"
+        assert str(query.order_expressions[0]) == "some"
 
     def test_ordering_by_first_field_asc(self):
         result = From(self.col).order_by("first").select_many()
@@ -66,6 +71,34 @@ class TestOrderBy(unittest.TestCase):
         result = From(self.col).order_by("-second", "-third").select_many()
         assert result[0].first == 4
         assert result[1].first == 7
+        assert result[2].first == 1
+
+    def test_asc_order_for_expression(self):
+        result = From(self.col).order_by("item.first + item.second").select_many()
+
+        assert result[0].first == 1
+        assert result[1].first == 4
+        assert result[2].first == 7
+
+    def test_desc_order_for_expression(self):
+        result = From(self.col).order_by("-(item.first + item.second)").select_many()
+
+        assert result[0].first == 7
+        assert result[1].first == 4
+        assert result[2].first == 1
+
+    def test_mixed_expression_order(self):
+        result = From(self.col).order_by("item.second + item.third", "item.first + item.second").select_many()
+
+        assert result[0].first == 7
+        assert result[1].first == 1
+        assert result[2].first == 4
+
+    def test_mixed_desc_expression_order(self):
+        result = From(self.col).order_by("item.second + item.third", "-(item.first + item.second)").select_many()
+
+        assert result[0].first == 7
+        assert result[1].first == 4
         assert result[2].first == 1
 
 if __name__ == '__main__':

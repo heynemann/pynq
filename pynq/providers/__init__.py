@@ -21,7 +21,7 @@ sys.path.insert(0, root_path)
 
 from pynq.enums import Actions
 from pynq.guard import Guard
-from pynq.expressions import NameExpression
+from pynq.expressions import NameExpression, UnaryExpression
 
 class IPynqProvider(object):
     def parse(self, query):
@@ -34,11 +34,24 @@ class CollectionProvider(IPynqProvider):
     def compare_items(self, a, b):
         expression = None
         for order_expression in self.order_expressions:
-            if order_expression.startswith("-"):
-                field = order_expression[1:]
-                result = cmp(-getattr(a, field), -getattr(b, field))
+            is_negate_expression = isinstance(order_expression, UnaryExpression) and \
+                                   order_expression.node_type == UnaryExpression.Negate
+
+            modifier = 1
+            curr_expr = order_expression
+            if is_negate_expression:
+                modifier = -1
+                curr_expr = order_expression.rhs
+
+            if isinstance(curr_expr, NameExpression):
+                field_name = curr_expr.name
+                result = cmp(modifier * getattr(a, field_name), modifier * getattr(b, field_name))
             else:
-                result = cmp(getattr(a, order_expression), getattr(b, order_expression))
+                item = a
+                val1 = eval(str(curr_expr))
+                item = b
+                val2 = eval(str(curr_expr))
+                result = cmp(modifier * val1, modifier * val2)
 
             expression = expression is None and result or (expression or result)
 

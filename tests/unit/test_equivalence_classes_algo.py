@@ -74,6 +74,25 @@ class TestEquivalenceClassesAlgorithm(unittest.TestCase):
         assert partitioned["odd"][0] == 1
         assert partitioned["odd"][1] == 3
         assert partitioned["odd"][2] == 5
+    
+    def test_algorithm_returns_proper_sets_for_objects(self):
+        class Value(object):
+            def __init__(self, value):
+                self.value = value
+        
+        col = [Value(1),Value(2),Value(3),Value(4),Value(5),]
+        r = lambda item: item.value % 2 == 0 and "even" or "odd"
+        
+        partitioned = EquivalenceClassSetPartition.partition(col, r)
+        
+        assert len(partitioned["even"]) == 2
+        assert len(partitioned["odd"]) == 3
+        
+        assert partitioned["even"][0].value == 2
+        assert partitioned["even"][1].value == 4
+        assert partitioned["odd"][0].value == 1
+        assert partitioned["odd"][1].value == 3
+        assert partitioned["odd"][2].value == 5        
         
 if __name__ == '__main__':
     unittest.main()

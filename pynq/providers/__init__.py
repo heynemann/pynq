@@ -22,6 +22,7 @@ sys.path.insert(0, root_path)
 from pynq.enums import Actions
 from pynq.guard import Guard
 from pynq.expressions import NameExpression, UnaryExpression
+from pynq.providers.partition_algorithm import EquivalenceClassSetPartition
 
 class IPynqProvider(object):
     def parse(self, query):
@@ -75,7 +76,7 @@ class CollectionProvider(IPynqProvider):
         else:
             raise ValueError("Invalid action exception. %s is unknown." % action)
         
-    def parse_select_many(self, query):
+    def __select_items_for(self, query):
         processed_collection = list(self.collection)
         for expression in query.expressions:
             klass = BinaryExpressionProcessor()
@@ -84,12 +85,29 @@ class CollectionProvider(IPynqProvider):
         if query.order_expressions:
             self.order_expressions = query.order_expressions
             processed_collection.sort(self.compare_items)
-
         return processed_collection
+        
+    def parse_select_many(self, query):
+        col = self.__select_items_for(query)
+        
+        group_expression = query.group_expression
+        if group_expression:
+            if isinstance(group_expression, NameExpression):
+                expr_name = group_expression.name
+                if "." in expr_name:
+                    rel = lambda item: reduce(getattr, expr_name, item)
+                else:
+                    rel = lambda item: getattr(item, expr_name)
+            else:
+                rel = lambda item: eval(str(query.group_expression))
+                
+            col = EquivalenceClassSetPartition.partition(col, rel)
+            
+        return col
     
     def parse_select(self, query, cols):
         columns = [query.parser.parse(col) for col in cols]
-        return self.transform_collection(self.parse_select_many(query), columns)
+        return self.transform_collection(self.__select_items_for(query), columns)
     
     def parse_count(self, query):
         return len(self.parse_select_many(query))

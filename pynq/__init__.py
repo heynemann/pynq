@@ -37,10 +37,16 @@ class Query(object):
             self.provider = provider
         self.expressions = [] 
         self.order_expressions = []
+        self.group_expression = None
         self.parser = ExpressionParser()
 
     def where(self, clause):
         self.expressions.append(self.parser.parse(clause.strip()))
+        return self
+
+    def group_by(self, *args):
+        for arg in args:
+            self.group_expression = self.parser.parse(arg.strip())
         return self
 
     def order_by(self, *args):

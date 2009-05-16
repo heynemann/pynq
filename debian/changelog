@@ -1,3 +1,10 @@
+python-pynq (0.3.0.Grape) dev; urgency=high
+
+  * Added support to ordering by expressions.
+  * Added support to selecting expressions.
+
+ -- Bernardo Heynemann <heynemann@gmail.com>  Thu, 14 May 2009 23:37:00 -0300
+
 python-pynq (0.2.0) dev; urgency=high
 
   * Added support to group functions: count, sum, average, minimum and maximum.

@@ -41,25 +41,44 @@ class TestGroupBy(unittest.TestCase):
         query = From(self.col).group_by("second")
         assert isinstance(query.group_expression, NameExpression)
     
-    def test_grouping_returns_two_keys_on_select(self):
+    def test_grouping_returns_two_keys_on_select_many(self):
         items = From(self.col).group_by("second").select_many()
         assert len(items.keys()) == 2
         
-    def test_grouping_returns_the_two_right_keys_on_select(self):
+    def test_grouping_returns_the_two_right_keys_on_select_many(self):
         items = From(self.col).group_by("second").select_many()
         assert items.has_key(2)
         assert items.has_key(5)
 
-    def test_grouping_returns_the_right_length_of_items_on_select(self):
+    def test_grouping_returns_the_right_length_of_items_on_select_many(self):
         items = From(self.col).group_by("second").select_many()
         assert len(items[2]) == 1
         assert len(items[5]) == 2
 
-    def test_grouping_returns_the_right_items_on_select(self):
+    def test_grouping_returns_the_right_items_on_select_many(self):
         items = From(self.col).order_by("first").group_by("second").select_many()
         assert items[2][0].first == 1
         assert items[5][0].first == 4
         assert items[5][1].first == 7
-      
+
+    def test_grouping_returns_the_right_items_on_select_many(self):
+        items = From(self.col).order_by("first").group_by("second").select("first", "second")
+        assert items[2][0].first == 1
+        assert items[2][0].second == 2
+        assert items[5][0].first == 4
+        assert items[5][0].second == 5
+        assert items[5][1].first == 7
+        assert items[5][1].second == 5
+        assert not hasattr(items[2][0], "third")
+        assert not hasattr(items[5][0], "third")
+        assert not hasattr(items[5][1], "third")
+
+    def test_grouping_with_strings_returns_the_right_items_on_select_many(self):
+        new_col = [TestClass("a", "z", "a"), TestClass("b","w","b"), TestClass("c","z","c")]
+        items = From(new_col).order_by("first").group_by("second").select_many()
+        assert items["z"][0].first == "a"
+        assert items["z"][1].first == "c"
+        assert items["w"][0].first == "b"
+
 if __name__ == '__main__':
     unittest.main()

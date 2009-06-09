@@ -24,16 +24,16 @@ from pynq.expressions import NameExpression
 
 class TestGroupBy(unittest.TestCase):
 
-    class TestClass(object):
+    class TestGroupByClass(object):
         def __init__(self, first, second, third):
             self.first = first
             self.second = second
             self.third = third
 
     def setUp(self):
-        self.entity1 = self.TestClass(1, 2, 8)
-        self.entity2 = self.TestClass(4, 5, 5)
-        self.entity3 = self.TestClass(7, 5, 2)
+        self.entity1 = self.TestGroupByClass(1, 2, 8)
+        self.entity2 = self.TestGroupByClass(4, 5, 5)
+        self.entity3 = self.TestGroupByClass(7, 5, 2)
         
         self.col = [self.entity3, self.entity1, self.entity2]
         
@@ -74,7 +74,9 @@ class TestGroupBy(unittest.TestCase):
         assert not hasattr(items[5][1], "third")
 
     def test_grouping_with_strings_returns_the_right_items_on_select_many(self):
-        new_col = [TestClass("a", "z", "a"), TestClass("b","w","b"), TestClass("c","z","c")]
+        new_col = [self.TestGroupByClass("a", "z", "a"), 
+                   self.TestGroupByClass("b","w","b"), 
+                   self.TestGroupByClass("c","z","c")]
         items = From(new_col).order_by("first").group_by("second").select_many()
         assert items["z"][0].first == "a"
         assert items["z"][1].first == "c"

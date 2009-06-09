@@ -15,7 +15,7 @@
 from setuptools import setup, find_packages
 import sys, os
 
-version = '0.3.0.Grape'
+version = '0.4.0.Pineapple'
 
 setup(name='Pynq',
       version=version,

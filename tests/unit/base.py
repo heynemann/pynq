@@ -18,6 +18,16 @@ import unittest
 import re
 
 class BaseUnitTest(unittest.TestCase):
+
+
+    # Discussion
+    #    assertRaisesEx() adds two optional arguments: "exc_args" 
+    #    and "exc_pattern". "exc_args" is a tuple that is expected 
+    #    to match the .args attribute of the raised exception. 
+    #    "exc_pattern" is a compiled regular expression that the 
+    #    stringified raised exception is expected to match.
+    # Original url: http://code.activestate.com/recipes/307970/
+    # Author: Trent Mick
     def assertRaisesEx(self, exception, callable, *args, **kwargs):
         if "exc_args" in kwargs:
             exc_args = kwargs["exc_args"]

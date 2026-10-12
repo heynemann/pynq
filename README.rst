@@ -21,3 +21,17 @@ Installing
 ----------
 
 Installing Pynq is detailed in the wiki Installing page (http://wiki.github.com/heynemann/pynq/installing).
+
+Grouping by expressions
+-----------------------
+
+Simple field names can be passed directly to ``group_by``. Calculations and
+nested attribute expressions refer to the current record as ``item``::
+
+    from pynq import From
+    From([1, 2, 3]).group_by("item % 2").select_many()
+    # {0: [2], 1: [1, 3]}
+
+Run the unit tests on the project's Python 2 runtime from the repository root::
+
+    python2 -m unittest discover -s tests/unit

@@ -84,7 +84,7 @@ class CollectionProvider(IPynqProvider):
             else:
                 rel = lambda item: getattr(item, expr_name)
         else:
-            rel = lambda item: eval(str(query.group_expression))
+            rel = lambda item: eval(str(group_expression))
 
         return EquivalenceClassSetPartition.partition(collection, rel)
 
